@@ -1,0 +1,32 @@
+{
+  "manifest_version": 3,
+  "name": "收藏夹清理",
+  "version": "1.0",
+  "description": "检查并清理收藏夹中无法访问的网址",
+  "permissions": [
+    "bookmarks",
+    "activeTab",
+    "storage",
+    "downloads"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "收藏夹清理",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}
