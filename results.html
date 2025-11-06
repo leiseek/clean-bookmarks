@@ -43,17 +43,52 @@
     .bookmark-list {
       margin-top: 20px;
     }
+    .folder-section {
+      margin-bottom: 25px;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .folder-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 15px;
+      background-color: #f5f5f5;
+      border-bottom: 1px solid #e0e0e0;
+    }
+    .folder-title {
+      margin: 0;
+      font-size: 16px;
+      font-weight: bold;
+      color: #333;
+    }
+    .folder-stats {
+      font-size: 12px;
+      color: #666;
+      background-color: #eee;
+      padding: 3px 8px;
+      border-radius: 12px;
+    }
     .bookmark-item {
       display: flex;
       align-items: center;
       padding: 15px;
-      margin-bottom: 10px;
-      border: 1px solid #e0e0e0;
-      border-radius: 4px;
+      border-bottom: 1px solid #e0e0e0;
       transition: all 0.2s;
+    }
+    .bookmark-item:last-child {
+      border-bottom: none;
+    }
+    .bookmark-item {
+      cursor: pointer;
     }
     .bookmark-item:hover {
       background-color: #f9f9f9;
+    }
+    .bookmark-title:hover {
+      color: #4285f4;
+      text-decoration: underline;
     }
     .bookmark-item.invalid {
       border-left: 4px solid #f44336;

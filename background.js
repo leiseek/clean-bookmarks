@@ -41,7 +41,7 @@ async function startBookmarkScan() {
       const bookmark = urlBookmarks[i];
       const progress = Math.round((i / urlBookmarks.length) * 100);
       
-      sendProgressUpdate(progress, `正在检查: ${bookmark.title}`);
+      sendProgressUpdate(progress, `${i + 1}/${urlBookmarks.length} - ${bookmark.title} - ${bookmark.url}`);
       
       try {
         // 检查URL是否可访问
@@ -51,6 +51,7 @@ async function startBookmarkScan() {
           id: bookmark.id,
           title: bookmark.title,
           url: bookmark.url,
+          folderPath: bookmark.folderPath,
           isValid: isValid,
           error: isValid ? null : '无法访问'
         });
@@ -59,6 +60,7 @@ async function startBookmarkScan() {
           id: bookmark.id,
           title: bookmark.title,
           url: bookmark.url,
+          folderPath: bookmark.folderPath,
           isValid: false,
           error: error.message
         });
@@ -91,12 +93,17 @@ async function startBookmarkScan() {
 function flattenBookmarkTree(bookmarkNodes) {
   let result = [];
   
-  function traverse(nodes) {
+  function traverse(nodes, path = []) {
     for (const node of nodes) {
       if (node.children) {
-        traverse(node.children);
+        // 如果是文件夹，继续递归，并将当前文件夹名称添加到路径中
+        traverse(node.children, [...path, node.title]);
       } else if (node.url) {
-        result.push(node);
+        // 如果是书签，添加到结果中，并包含路径信息
+        result.push({
+          ...node,
+          folderPath: path.length > 0 ? path.join(' > ') : '其他书签'
+        });
       }
     }
   }

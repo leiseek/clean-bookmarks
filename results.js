@@ -100,20 +100,66 @@ document.addEventListener('DOMContentLoaded', function() {
     // 清空列表
     bookmarkList.innerHTML = '';
     
+    // 按文件夹分组
+    const bookmarksByFolder = {};
+    scanResults.forEach(bookmark => {
+      const folder = bookmark.folderPath || '其他书签';
+      if (!bookmarksByFolder[folder]) {
+        bookmarksByFolder[folder] = [];
+      }
+      bookmarksByFolder[folder].push(bookmark);
+    });
+    
+    // 按文件夹名称排序
+    const sortedFolders = Object.keys(bookmarksByFolder).sort();
+    
+    // 创建文件夹分组
+    sortedFolders.forEach(folderName => {
+      const folderSection = createFolderSection(folderName, bookmarksByFolder[folderName]);
+      bookmarkList.appendChild(folderSection);
+    });
+    
+    // 初始化全选复选框状态
+    updateCleanButton();
+  }
+  
+  // 创建文件夹分组
+  function createFolderSection(folderName, bookmarks) {
+    const section = document.createElement('div');
+    section.className = 'folder-section';
+    
+    const folderHeader = document.createElement('div');
+    folderHeader.className = 'folder-header';
+    
+    const folderTitle = document.createElement('h3');
+    folderTitle.className = 'folder-title';
+    folderTitle.textContent = folderName;
+    
+    // 统计文件夹中的失效链接数
+    const invalidCount = bookmarks.filter(item => !item.isValid).length;
+    const totalCount = bookmarks.length;
+    
+    const folderStats = document.createElement('span');
+    folderStats.className = 'folder-stats';
+    folderStats.textContent = `${invalidCount}/${totalCount} 失效`;
+    
+    folderHeader.appendChild(folderTitle);
+    folderHeader.appendChild(folderStats);
+    section.appendChild(folderHeader);
+    
     // 按状态排序，失效的在前面
-    const sortedResults = [...scanResults].sort((a, b) => {
+    const sortedBookmarks = [...bookmarks].sort((a, b) => {
       if (a.isValid === b.isValid) return 0;
       return a.isValid ? 1 : -1;
     });
     
     // 创建书签项
-    sortedResults.forEach(bookmark => {
+    sortedBookmarks.forEach(bookmark => {
       const bookmarkItem = createBookmarkItem(bookmark);
-      bookmarkList.appendChild(bookmarkItem);
+      section.appendChild(bookmarkItem);
     });
     
-    // 初始化全选复选框状态
-    updateCleanButton();
+    return section;
   }
   
   // 创建书签项
@@ -153,6 +199,18 @@ document.addEventListener('DOMContentLoaded', function() {
     const status = document.createElement('div');
     status.className = `bookmark-status ${bookmark.isValid ? 'status-valid' : 'status-invalid'}`;
     status.textContent = bookmark.isValid ? '正常' : '失效';
+    
+    // 添加点击事件，在item上创建一个可点击的链接
+    item.style.cursor = 'pointer';
+    item.addEventListener('click', function(e) {
+      // 如果点击的是复选框，不处理打开链接
+      if (e.target === checkbox) {
+        return;
+      }
+      
+      // 在新标签页打开链接
+      chrome.tabs.create({ url: bookmark.url });
+    });
     
     item.appendChild(checkbox);
     item.appendChild(info);
