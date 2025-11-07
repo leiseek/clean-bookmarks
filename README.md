@@ -1,5 +1,13 @@
 # 收藏夹清理 - Chrome插件
 
+## 语言选择 / Language Selection
+- [中文(简体)](#收藏夹清理---chrome插件)
+- [English](#bookmark-cleaner---chrome-extension)
+- [日本語](#ブックマーククリーナー---chrome拡張機能)
+- [한국어](#북마크-클리너---chrome-확장-프로그램)
+- [Français](#nettoyeur-de-favoris---extension-chrome)
+- [Español](#limpiador-de-marcadores---extensión-chrome)
+
 一个实用的Chrome插件，用于检查并清理收藏夹中无法访问的网址。
 
 ## 功能特点
