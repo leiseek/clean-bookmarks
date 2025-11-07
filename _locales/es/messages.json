@@ -1,0 +1,312 @@
+{
+  "extensionName": {
+    "message": "Limpiador de Marcadores",
+    "description": "Extension name"
+  },
+  "extensionDescription": {
+    "message": "Verificar y limpiar URLs inaccesibles en los marcadores",
+    "description": "Extension description"
+  },
+  "popupTitle": {
+    "message": "Limpiador de Marcadores",
+    "description": "Popup title"
+  },
+  "scanButton": {
+    "message": "Escanear Marcadores",
+    "description": "Scan button"
+  },
+  "scanningButton": {
+    "message": "Escaneando...",
+    "description": "Scanning button"
+  },
+  "rescanButton": {
+    "message": "Volver a Escanear",
+    "description": "Rescan button"
+  },
+  "viewResultsButton": {
+    "message": "Ver Resultados",
+    "description": "View results button"
+  },
+  "cleanButton": {
+    "message": "Limpiar Enlaces Inválidos",
+    "description": "Clean button"
+  },
+  "readyStatus": {
+    "message": "Listo",
+    "description": "Ready status"
+  },
+  "gettingBookmarks": {
+    "message": "Recuperando marcadores...",
+    "description": "Retrieving bookmarks"
+  },
+  "scanComplete": {
+    "message": "Escaneo completo: $count$ enlaces inválidos encontrados",
+    "description": "Scan complete status",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
+  "resultsPageTitle": {
+    "message": "Resultados del Escaneo de Marcadores",
+    "description": "Results page title"
+  },
+  "resultsPageHeader": {
+    "message": "Resultados del Escaneo de Marcadores",
+    "description": "Results page header"
+  },
+  "refreshButton": {
+    "message": "Volver a Escanear",
+    "description": "Refresh button"
+  },
+  "loadingResults": {
+    "message": "Cargando resultados del escaneo...",
+    "description": "Loading results"
+  },
+  "totalBookmarks": {
+    "message": "Total: $count$ marcadores",
+    "description": "Total bookmarks",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "100"
+      }
+    }
+  },
+  "invalidBookmarks": {
+    "message": "Inválidos: $count$ marcadores",
+    "description": "Invalid bookmarks",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
+  "validBookmarks": {
+    "message": "Válidos: $count$ marcadores",
+    "description": "Valid bookmarks",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "95"
+      }
+    }
+  },
+  "selectAllInvalid": {
+    "message": "Seleccionar Todos los Enlaces Inválidos",
+    "description": "Select all invalid links"
+  },
+  "backupButton": {
+    "message": "Respaldar Marcadores Actuales",
+    "description": "Backup button"
+  },
+  "emptyStateIcon": {
+    "message": "📋",
+    "description": "Empty state icon"
+  },
+  "emptyStateTitle": {
+    "message": "Sin Resultados de Escaneo",
+    "description": "Empty state title"
+  },
+  "emptyStateText": {
+    "message": "Primero escanee sus marcadores",
+    "description": "Empty state text"
+  },
+  "scanNowButton": {
+    "message": "Escanear Ahora",
+    "description": "Scan now button"
+  },
+  "confirmCleanTitle": {
+    "message": "Confirmar Limpieza",
+    "description": "Confirm cleanup title"
+  },
+  "confirmCleanActionsTitle": {
+    "message": "Esta operación va a:",
+    "description": "Título antes de las instrucciones de operación de limpieza"
+  },
+  "confirmCleanText": {
+    "message": "¿Está seguro de que desea limpiar los $count$ marcadores inválidos seleccionados?",
+    "description": "Confirm cleanup text",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
+  "confirmCleanActions1": {
+    "message": "Respaldar marcadores actuales en el escritorio",
+    "description": "Confirm cleanup action 1"
+  },
+  "confirmCleanActions2": {
+    "message": "Eliminar marcadores inválidos seleccionados",
+    "description": "Confirm cleanup action 2"
+  },
+  "confirmCleanActions3": {
+    "message": "Esta acción no se puede deshacer",
+    "description": "Confirm cleanup action 3"
+  },
+  "cancelButton": {
+    "message": "Cancelar",
+    "description": "Cancel button"
+  },
+  "confirmCleanButton": {
+    "message": "Confirmar Limpieza",
+    "description": "Confirm cleanup button"
+  },
+  "cleanCompleteTitle": {
+    "message": "Limpieza Completa",
+    "description": "Cleanup complete title"
+  },
+  "cleanCompleteText": {
+    "message": "Se limpiaron correctamente $count$ marcadores inválidos",
+    "description": "Cleanup complete text",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
+  "backupSavedText": {
+    "message": "El archivo de respaldo se ha guardado en su escritorio",
+    "description": "Backup saved text"
+  },
+  "closeButton": {
+    "message": "Cerrar",
+    "description": "Close button"
+  },
+  "statusValid": {
+    "message": "Válido",
+    "description": "Valid status"
+  },
+  "statusInvalid": {
+    "message": "Inválido",
+    "description": "Invalid status"
+  },
+  "backupStartedAlert": {
+    "message": "El respaldo de marcadores ha comenzado, consulte su lista de descargas",
+    "description": "Backup started alert"
+  },
+  "selectBookmarksToClean": {
+    "message": "Seleccione los marcadores que desea limpiar",
+    "description": "Select bookmarks prompt"
+  },
+  "cleanErrorAlert": {
+    "message": "Error durante la limpieza: $error$",
+    "description": "Cleanup error alert",
+    "placeholders": {
+      "error": {
+        "content": "$1",
+        "example": "Error de red"
+      }
+    }
+  },
+  "bookmarksHtmlTitle": {
+    "message": "Respaldo de Marcadores",
+    "description": "Bookmark HTML backup title"
+  },
+  "untitledFolder": {
+    "message": "Carpeta Sin Nombre",
+    "description": "Untitled folder"
+  },
+  "untitledBookmark": {
+    "message": "Marcador Sin Nombre",
+    "description": "Untitled bookmark"
+  },
+  "otherBookmarks": {
+    "message": "Otros Marcadores",
+    "description": "Other bookmarks"
+  },
+  "preparingScan": {
+    "message": "Preparando para escanear $count$ marcadores...",
+    "description": "Preparing scan",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "100"
+      }
+    }
+  },
+  "scanningProgress": {
+    "message": "$current$/$total$ - $title$ - $url$ (Encontrados $invalid$ enlaces inválidos)",
+    "description": "Scanning progress",
+    "placeholders": {
+      "current": {
+        "content": "$1",
+        "example": "50"
+      },
+      "total": {
+        "content": "$2",
+        "example": "100"
+      },
+      "title": {
+        "content": "$3",
+        "example": "Google"
+      },
+      "url": {
+        "content": "$4",
+        "example": "https://www.google.com"
+      },
+      "invalid": {
+        "content": "$5",
+        "example": "5"
+      }
+    }
+  },
+  "scanFailed": {
+    "message": "Escaneo fallido: $error$",
+    "description": "Scan failed",
+    "placeholders": {
+      "error": {
+        "content": "$1",
+        "example": "Error de red"
+      }
+    }
+  },
+  "folderStats": {
+    "message": "$invalid$/$total$ inválidos",
+    "description": "Estadísticas de carpeta",
+    "placeholders": {
+      "invalid": {
+        "content": "$1",
+        "example": "2"
+      },
+      "total": {
+        "content": "$2",
+        "example": "10"
+      }
+    }
+  },
+  "currentBookmarkLabel": {
+    "message": "Marcador actual: ",
+    "description": "Etiqueta de marcador actual"
+  },
+  "urlLabel": {
+    "message": "URL: ",
+    "description": "Etiqueta URL"
+  },
+  "invalidLinksLabel": {
+    "message": "Enlaces inválidos encontrados: ",
+    "description": "Etiqueta de enlaces inválidos encontrados"
+  },
+  "backupInProgress": {
+    "message": "Copia de seguridad de marcadores en progreso, el archivo se descargará automáticamente en tu carpeta de descargas",
+    "description": "Mensaje de copia de seguridad en progreso"
+  },
+  "backupFailed": {
+    "message": "Error al copiar seguridad de marcadores, por favor inténtalo de nuevo más tarde",
+    "description": "Mensaje de error de copia de seguridad"
+  },
+  "backupSuccess": {
+    "message": "Copia de seguridad de marcadores exitosa",
+    "description": "Mensaje de éxito de copia de seguridad"
+  },
+  "backupEmpty": {
+    "message": "No se encontró contenido de marcadores para copiar seguridad",
+    "description": "Mensaje de contenido de copia de seguridad vacío"
+  }
+}

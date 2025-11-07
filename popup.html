@@ -3,70 +3,184 @@
 <head>
   <meta charset="utf-8">
   <style>
-    body {
-      width: 300px;
-      padding: 15px;
-      font-family: Arial, sans-serif;
+    /* iOS液体玻璃风格基础样式 */
+    :root {
+      --primary-color: #007AFF;
+      --secondary-color: #5AC8FA;
+      --success-color: #34C759;
+      --danger-color: #FF3B30;
+      --warning-color: #FF9500;
+      --light-bg: rgba(255, 255, 255, 0.7);
+      --dark-bg: rgba(0, 0, 0, 0.1);
+      --border-color: rgba(255, 255, 255, 0.5);
     }
+    
+    body {
+      width: 320px;
+      padding: 20px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background: linear-gradient(135deg, #E8F5E9 0%, #E0F7FA 50%, #F3E5F5 100%);
+      margin: 0;
+      min-height: 200px;
+    }
+    
+    /* 液体玻璃容器 */
+    .glass-container {
+      background: var(--light-bg);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border-radius: 20px;
+      border: 1px solid var(--border-color);
+      padding: 20px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+    }
+    
     .header {
       text-align: center;
-      margin-bottom: 15px;
+      margin-bottom: 20px;
     }
+    
+    .header h3 {
+      font-size: 18px;
+      font-weight: 600;
+      color: #333;
+      margin: 0;
+      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    
     .btn {
       width: 100%;
-      padding: 10px;
-      margin: 5px 0;
-      background-color: #4285f4;
+      padding: 12px;
+      margin: 8px 0;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
       color: white;
       border: none;
-      border-radius: 4px;
+      border-radius: 12px;
       cursor: pointer;
-      font-size: 14px;
+      font-size: 15px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
     }
-    .btn:hover {
-      background-color: #3367d6;
+    
+    .btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0, 122, 255, 0.4);
     }
+    
+    .btn:active:not(:disabled) {
+      transform: translateY(0);
+      box-shadow: 0 2px 8px rgba(0, 122, 255, 0.3);
+    }
+    
     .btn:disabled {
-      background-color: #cccccc;
+      background: var(--dark-bg);
+      color: rgba(0, 0, 0, 0.4);
       cursor: not-allowed;
+      box-shadow: none;
     }
-    .status {
-      margin-top: 10px;
-      text-align: center;
-      font-size: 12px;
-      color: #666;
-    }
+    
     .progress {
-      margin-top: 10px;
-      height: 5px;
-      background-color: #f1f1f1;
-      border-radius: 5px;
+      margin-top: 15px;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.5);
+      border-radius: 3px;
       overflow: hidden;
       display: none;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
     }
+    
     .progress-bar {
       height: 100%;
-      background-color: #4285f4;
+      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
       width: 0%;
-      transition: width 0.3s;
+      transition: width 0.3s ease;
+      border-radius: 3px;
+    }
+    
+    /* 扫描详情样式 */
+    .scan-details {
+      margin-top: 15px;
+      padding: 15px;
+      background: rgba(255, 255, 255, 0.6);
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      font-size: 13px;
+    }
+    
+    .detail-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+    
+    .detail-item:last-child {
+      margin-bottom: 0;
+    }
+    
+    .detail-label {
+      font-weight: 500;
+      color: #666;
+      margin-right: 8px;
+    }
+    
+    .detail-value {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex: 1;
+      text-align: right;
+      min-width: 100px;
+    }
+    
+    .detail-value {
+      flex: 1;
+      text-align: right;
+      color: #333;
+      word-break: break-all;
+      overflow-wrap: break-word;
     }
   </style>
 </head>
 <body>
-  <div class="header">
-    <h3>收藏夹清理</h3>
-  </div>
+    <div class="glass-container">
+      <div class="header">
+        <h3 id="popupTitle"></h3>
+      </div>
+      
+      <button id="scanBtn" class="btn"></button>
+      <button id="viewBtn" class="btn" disabled></button>
+      <button id="cleanBtn" class="btn" disabled></button>
+      <div id="progress" class="progress">
+        <div id="progressBar" class="progress-bar"></div>
+      </div>
+      <div id="scanDetails" class="scan-details" style="display: none;">
+        <div class="detail-item">
+          <span class="detail-label">进度：</span>
+          <span id="scanProgress" class="detail-value"></span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label" id="currentBookmarkLabel"></span>
+          <span id="currentTitle" class="detail-value"></span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label" id="urlLabel"></span>
+          <span id="currentUrl" class="detail-value"></span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label" id="invalidLinksLabel"></span>
+          <span id="invalidCount" class="detail-value"></span>
+        </div>
+      </div>
+    </div>
   
-  <button id="scanBtn" class="btn">扫描收藏夹</button>
-  <button id="viewBtn" class="btn" disabled>查看扫描结果</button>
-  <button id="cleanBtn" class="btn" disabled>清理失效链接</button>
-  
-  <div id="progress" class="progress">
-    <div id="progressBar" class="progress-bar"></div>
-  </div>
-  
-  <div id="status" class="status">准备就绪</div>
-  
-  <script src="popup.js"></script>
-</body>
+    <!-- 国际化文本设置已移至popup.js文件 -->
+    <script src="popup.js"></script>
+  </body>
 </html>

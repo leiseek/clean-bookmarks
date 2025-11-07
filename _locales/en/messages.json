@@ -1,0 +1,312 @@
+{
+  "extensionName": {
+    "message": "Bookmark Cleaner",
+    "description": "Extension name"
+  },
+  "extensionDescription": {
+    "message": "Check and clean inaccessible URLs in bookmarks",
+    "description": "Extension description"
+  },
+  "popupTitle": {
+    "message": "Bookmark Cleaner",
+    "description": "Popup title"
+  },
+  "scanButton": {
+    "message": "Scan Bookmarks",
+    "description": "Scan button"
+  },
+  "scanningButton": {
+    "message": "Scanning...",
+    "description": "Scanning button"
+  },
+  "rescanButton": {
+    "message": "Rescan",
+    "description": "Rescan button"
+  },
+  "viewResultsButton": {
+    "message": "View Scan Results",
+    "description": "View results button"
+  },
+  "cleanButton": {
+    "message": "Clean Invalid Links",
+    "description": "Clean button"
+  },
+  "readyStatus": {
+    "message": "Ready",
+    "description": "Ready status"
+  },
+  "gettingBookmarks": {
+    "message": "Retrieving bookmarks...",
+    "description": "Retrieving bookmarks"
+  },
+  "scanComplete": {
+    "message": "Scan complete: Found $count$ invalid links",
+    "description": "Scan complete status",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
+  "resultsPageTitle": {
+    "message": "Bookmark Scan Results",
+    "description": "Results page title"
+  },
+  "resultsPageHeader": {
+    "message": "Bookmark Scan Results",
+    "description": "Results page header"
+  },
+  "refreshButton": {
+    "message": "Rescan",
+    "description": "Refresh button"
+  },
+  "loadingResults": {
+    "message": "Loading scan results...",
+    "description": "Loading results"
+  },
+  "totalBookmarks": {
+    "message": "Total: $count$ bookmarks",
+    "description": "Total bookmarks",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "100"
+      }
+    }
+  },
+  "invalidBookmarks": {
+    "message": "Invalid: $count$ bookmarks",
+    "description": "Invalid bookmarks",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
+  "validBookmarks": {
+    "message": "Valid: $count$ bookmarks",
+    "description": "Valid bookmarks",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "95"
+      }
+    }
+  },
+  "selectAllInvalid": {
+    "message": "Select All Invalid Links",
+    "description": "Select all invalid links"
+  },
+  "backupButton": {
+    "message": "Backup Current Bookmarks",
+    "description": "Backup button"
+  },
+  "emptyStateIcon": {
+    "message": "📋",
+    "description": "Empty state icon"
+  },
+  "emptyStateTitle": {
+    "message": "No Scan Results",
+    "description": "Empty state title"
+  },
+  "emptyStateText": {
+    "message": "Please scan your bookmarks first",
+    "description": "Empty state text"
+  },
+  "scanNowButton": {
+    "message": "Scan Now",
+    "description": "Scan now button"
+  },
+  "confirmCleanTitle": {
+    "message": "Confirm Cleanup",
+    "description": "Confirm cleanup title"
+  },
+  "confirmCleanActionsTitle": {
+    "message": "This operation will:",
+    "description": "Title before cleanup operation instructions"
+  },
+  "confirmCleanText": {
+    "message": "Are you sure you want to clean up the selected $count$ invalid bookmarks?",
+    "description": "Confirm cleanup text",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
+  "confirmCleanActions1": {
+    "message": "Backup current bookmarks to desktop",
+    "description": "Confirm cleanup action 1"
+  },
+  "confirmCleanActions2": {
+    "message": "Delete selected invalid bookmarks",
+    "description": "Confirm cleanup action 2"
+  },
+  "confirmCleanActions3": {
+    "message": "This action cannot be undone",
+    "description": "Confirm cleanup action 3"
+  },
+  "cancelButton": {
+    "message": "Cancel",
+    "description": "Cancel button"
+  },
+  "confirmCleanButton": {
+    "message": "Confirm Cleanup",
+    "description": "Confirm cleanup button"
+  },
+  "cleanCompleteTitle": {
+    "message": "Cleanup Complete",
+    "description": "Cleanup complete title"
+  },
+  "cleanCompleteText": {
+    "message": "Successfully cleaned up $count$ invalid bookmarks",
+    "description": "Cleanup complete text",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
+  "backupSavedText": {
+    "message": "Backup file has been saved to your desktop",
+    "description": "Backup saved text"
+  },
+  "closeButton": {
+    "message": "Close",
+    "description": "Close button"
+  },
+  "statusValid": {
+    "message": "Valid",
+    "description": "Valid status"
+  },
+  "statusInvalid": {
+    "message": "Invalid",
+    "description": "Invalid status"
+  },
+  "backupStartedAlert": {
+    "message": "Bookmark backup has started, please check your download list",
+    "description": "Backup started alert"
+  },
+  "selectBookmarksToClean": {
+    "message": "Please select bookmarks to clean",
+    "description": "Select bookmarks prompt"
+  },
+  "cleanErrorAlert": {
+    "message": "Error during cleanup: $error$",
+    "description": "Cleanup error alert",
+    "placeholders": {
+      "error": {
+        "content": "$1",
+        "example": "Network error"
+      }
+    }
+  },
+  "bookmarksHtmlTitle": {
+    "message": "Bookmark Backup",
+    "description": "Bookmark HTML backup title"
+  },
+  "untitledFolder": {
+    "message": "Untitled Folder",
+    "description": "Untitled folder"
+  },
+  "untitledBookmark": {
+    "message": "Untitled Bookmark",
+    "description": "Untitled bookmark"
+  },
+  "otherBookmarks": {
+    "message": "Other Bookmarks",
+    "description": "Other bookmarks"
+  },
+  "preparingScan": {
+    "message": "Preparing to scan $count$ bookmarks...",
+    "description": "Preparing scan",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "100"
+      }
+    }
+  },
+  "scanningProgress": {
+    "message": "$current$/$total$ - $title$ - $url$ (Found $invalid$ invalid links)",
+    "description": "Scanning progress",
+    "placeholders": {
+      "current": {
+        "content": "$1",
+        "example": "50"
+      },
+      "total": {
+        "content": "$2",
+        "example": "100"
+      },
+      "title": {
+        "content": "$3",
+        "example": "Google"
+      },
+      "url": {
+        "content": "$4",
+        "example": "https://www.google.com"
+      },
+      "invalid": {
+        "content": "$5",
+        "example": "5"
+      }
+    }
+  },
+  "scanFailed": {
+    "message": "Scan failed: $error$",
+    "description": "Scan failed",
+    "placeholders": {
+      "error": {
+        "content": "$1",
+        "example": "Network error"
+      }
+    }
+  },
+  "folderStats": {
+    "message": "$invalid$/$total$ invalid",
+    "description": "Folder statistics",
+    "placeholders": {
+      "invalid": {
+        "content": "$1",
+        "example": "2"
+      },
+      "total": {
+        "content": "$2",
+        "example": "10"
+      }
+    }
+  },
+  "currentBookmarkLabel": {
+    "message": "Current Bookmark: ",
+    "description": "Current bookmark label"
+  },
+  "urlLabel": {
+    "message": "URL: ",
+    "description": "URL label"
+  },
+  "invalidLinksLabel": {
+    "message": "Invalid Links Found: ",
+    "description": "Invalid links found label"
+  },
+  "backupInProgress": {
+    "message": "Bookmark backup in progress, file will be automatically downloaded to your downloads folder",
+    "description": "Backup in progress message"
+  },
+  "backupFailed": {
+    "message": "Bookmark backup failed, please try again later",
+    "description": "Backup failed message"
+  },
+  "backupSuccess": {
+    "message": "Bookmark backup successful",
+    "description": "Backup success message"
+  },
+  "backupEmpty": {
+    "message": "No bookmark content found to backup",
+    "description": "Backup empty content message"
+  }
+}

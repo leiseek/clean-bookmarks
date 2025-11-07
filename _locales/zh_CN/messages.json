@@ -1,0 +1,312 @@
+{
+  "extensionName": {
+    "message": "收藏夹清理",
+    "description": "扩展名称"
+  },
+  "extensionDescription": {
+    "message": "检查并清理收藏夹中无法访问的网址",
+    "description": "扩展描述"
+  },
+  "popupTitle": {
+    "message": "收藏夹清理",
+    "description": "弹窗标题"
+  },
+  "scanButton": {
+    "message": "扫描收藏夹",
+    "description": "扫描按钮"
+  },
+  "scanningButton": {
+    "message": "正在扫描...",
+    "description": "正在扫描按钮"
+  },
+  "rescanButton": {
+    "message": "重新扫描",
+    "description": "重新扫描按钮"
+  },
+  "viewResultsButton": {
+    "message": "查看扫描结果",
+    "description": "查看结果按钮"
+  },
+  "cleanButton": {
+    "message": "清理失效链接",
+    "description": "清理按钮"
+  },
+  "readyStatus": {
+    "message": "准备就绪",
+    "description": "准备就绪状态"
+  },
+  "gettingBookmarks": {
+    "message": "正在获取收藏夹...",
+    "description": "正在获取收藏夹"
+  },
+  "scanComplete": {
+    "message": "扫描完成: 发现 $count$ 个失效链接",
+    "description": "扫描完成状态",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
+  "resultsPageTitle": {
+    "message": "收藏夹扫描结果",
+    "description": "结果页面标题"
+  },
+  "resultsPageHeader": {
+    "message": "收藏夹扫描结果",
+    "description": "结果页面头部"
+  },
+  "refreshButton": {
+    "message": "重新扫描",
+    "description": "重新扫描按钮"
+  },
+  "loadingResults": {
+    "message": "正在加载扫描结果...",
+    "description": "加载结果中"
+  },
+  "totalBookmarks": {
+    "message": "总计: $count$ 个书签",
+    "description": "总书签数",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "100"
+      }
+    }
+  },
+  "invalidBookmarks": {
+    "message": "失效: $count$ 个书签",
+    "description": "失效书签数",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
+  "validBookmarks": {
+    "message": "正常: $count$ 个书签",
+    "description": "正常书签数",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "95"
+      }
+    }
+  },
+  "selectAllInvalid": {
+    "message": "全选失效链接",
+    "description": "全选失效链接"
+  },
+  "backupButton": {
+    "message": "备份当前收藏夹",
+    "description": "备份按钮"
+  },
+  "emptyStateIcon": {
+    "message": "📋",
+    "description": "空状态图标"
+  },
+  "emptyStateTitle": {
+    "message": "没有扫描结果",
+    "description": "空状态标题"
+  },
+  "emptyStateText": {
+    "message": "请先进行收藏夹扫描",
+    "description": "空状态文本"
+  },
+  "scanNowButton": {
+    "message": "立即扫描",
+    "description": "立即扫描按钮"
+  },
+  "confirmCleanTitle": {
+    "message": "确认清理",
+    "description": "确认清理对话框的标题"
+  },
+  "confirmCleanActionsTitle": {
+    "message": "此操作将：",
+    "description": "清理操作说明前的标题"
+  },
+  "confirmCleanText": {
+    "message": "您确定要清理选中的 $count$ 个失效书签吗？",
+    "description": "确认清理文本",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
+  "confirmCleanActions1": {
+    "message": "备份当前收藏夹到桌面",
+    "description": "确认清理操作1"
+  },
+  "confirmCleanActions2": {
+    "message": "删除选中的失效书签",
+    "description": "确认清理操作2"
+  },
+  "confirmCleanActions3": {
+    "message": "此操作不可撤销",
+    "description": "确认清理操作3"
+  },
+  "cancelButton": {
+    "message": "取消",
+    "description": "取消按钮"
+  },
+  "confirmCleanButton": {
+    "message": "确认清理",
+    "description": "确认清理按钮"
+  },
+  "cleanCompleteTitle": {
+    "message": "清理完成",
+    "description": "清理完成标题"
+  },
+  "cleanCompleteText": {
+    "message": "已成功清理 $count$ 个失效书签",
+    "description": "清理完成文本",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
+  "backupSavedText": {
+    "message": "备份文件已保存到您的桌面",
+    "description": "备份保存文本"
+  },
+  "closeButton": {
+    "message": "关闭",
+    "description": "关闭按钮"
+  },
+  "statusValid": {
+    "message": "正常",
+    "description": "正常状态"
+  },
+  "statusInvalid": {
+    "message": "失效",
+    "description": "失效状态"
+  },
+  "backupStartedAlert": {
+    "message": "收藏夹备份已开始，请查看下载列表",
+    "description": "备份开始提示"
+  },
+  "selectBookmarksToClean": {
+    "message": "请选择要清理的书签",
+    "description": "选择书签提示"
+  },
+  "cleanErrorAlert": {
+    "message": "清理过程中出错: $error$",
+    "description": "清理错误提示",
+    "placeholders": {
+      "error": {
+        "content": "$1",
+        "example": "网络错误"
+      }
+    }
+  },
+  "bookmarksHtmlTitle": {
+    "message": "书签备份",
+    "description": "书签HTML备份标题"
+  },
+  "untitledFolder": {
+    "message": "未命名文件夹",
+    "description": "未命名文件夹"
+  },
+  "untitledBookmark": {
+    "message": "未命名书签",
+    "description": "未命名书签"
+  },
+  "otherBookmarks": {
+    "message": "其他书签",
+    "description": "其他书签"
+  },
+  "preparingScan": {
+    "message": "准备扫描 $count$ 个书签...",
+    "description": "准备扫描",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "100"
+      }
+    }
+  },
+  "scanningProgress": {
+    "message": "$current$/$total$ - $title$ - $url$ (已发现 $invalid$ 个失效链接)",
+    "description": "扫描进度",
+    "placeholders": {
+      "current": {
+        "content": "$1",
+        "example": "50"
+      },
+      "total": {
+        "content": "$2",
+        "example": "100"
+      },
+      "title": {
+        "content": "$3",
+        "example": "Google"
+      },
+      "url": {
+        "content": "$4",
+        "example": "https://www.google.com"
+      },
+      "invalid": {
+        "content": "$5",
+        "example": "5"
+      }
+    }
+  },
+  "scanFailed": {
+    "message": "扫描失败: $error$",
+    "description": "扫描失败",
+    "placeholders": {
+      "error": {
+        "content": "$1",
+        "example": "网络错误"
+      }
+    }
+  },
+  "folderStats": {
+    "message": "$invalid$/$total$ 失效",
+    "description": "文件夹统计",
+    "placeholders": {
+      "invalid": {
+        "content": "$1",
+        "example": "2"
+      },
+      "total": {
+        "content": "$2",
+        "example": "10"
+      }
+    }
+  },
+  "currentBookmarkLabel": {
+    "message": "当前书签：",
+    "description": "当前书签标签"
+  },
+  "urlLabel": {
+    "message": "URL：",
+    "description": "URL标签"
+  },
+  "invalidLinksLabel": {
+    "message": "已发现失效链接：",
+    "description": "已发现失效链接标签"
+  },
+  "backupInProgress": {
+    "message": "书签备份正在进行中，文件将自动下载到您的下载文件夹",
+    "description": "备份进行中消息"
+  },
+  "backupFailed": {
+    "message": "书签备份失败，请稍后重试",
+    "description": "备份失败消息"
+  },
+  "backupSuccess": {
+    "message": "书签备份成功",
+    "description": "备份成功消息"
+  },
+  "backupEmpty": {
+    "message": "没有找到可备份的书签内容",
+    "description": "备份内容为空消息"
+  }
+}

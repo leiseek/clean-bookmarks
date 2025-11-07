@@ -1,0 +1,312 @@
+{
+  "extensionName": {
+    "message": "Nettoyeur de Favoris",
+    "description": "Extension name"
+  },
+  "extensionDescription": {
+    "message": "Vérifier et nettoyer les URL inaccessibles dans les favoris",
+    "description": "Extension description"
+  },
+  "popupTitle": {
+    "message": "Nettoyeur de Favoris",
+    "description": "Popup title"
+  },
+  "scanButton": {
+    "message": "Analyser les Favoris",
+    "description": "Scan button"
+  },
+  "scanningButton": {
+    "message": "Analyse en cours...",
+    "description": "Scanning button"
+  },
+  "rescanButton": {
+    "message": "Réanalyser",
+    "description": "Rescan button"
+  },
+  "viewResultsButton": {
+    "message": "Voir les Résultats",
+    "description": "View results button"
+  },
+  "cleanButton": {
+    "message": "Nettoyer les Liens Invalides",
+    "description": "Clean button"
+  },
+  "readyStatus": {
+    "message": "Prêt",
+    "description": "Ready status"
+  },
+  "gettingBookmarks": {
+    "message": "Récupération des favoris...",
+    "description": "Retrieving bookmarks"
+  },
+  "scanComplete": {
+    "message": "Analyse terminée: $count$ liens invalides trouvés",
+    "description": "Scan complete status",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
+  "resultsPageTitle": {
+    "message": "Résultats de l'Analyse des Favoris",
+    "description": "Results page title"
+  },
+  "resultsPageHeader": {
+    "message": "Résultats de l'Analyse des Favoris",
+    "description": "Results page header"
+  },
+  "refreshButton": {
+    "message": "Réanalyser",
+    "description": "Refresh button"
+  },
+  "loadingResults": {
+    "message": "Chargement des résultats d'analyse...",
+    "description": "Loading results"
+  },
+  "totalBookmarks": {
+    "message": "Total: $count$ favoris",
+    "description": "Total bookmarks",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "100"
+      }
+    }
+  },
+  "invalidBookmarks": {
+    "message": "Invalides: $count$ favoris",
+    "description": "Invalid bookmarks",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
+  "validBookmarks": {
+    "message": "Valides: $count$ favoris",
+    "description": "Valid bookmarks",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "95"
+      }
+    }
+  },
+  "selectAllInvalid": {
+    "message": "Sélectionner tous les liens invalides",
+    "description": "Select all invalid links"
+  },
+  "backupButton": {
+    "message": "Sauvegarder les Favoris Actuels",
+    "description": "Backup button"
+  },
+  "emptyStateIcon": {
+    "message": "📋",
+    "description": "Empty state icon"
+  },
+  "emptyStateTitle": {
+    "message": "Aucun Résultat d'Analyse",
+    "description": "Empty state title"
+  },
+  "emptyStateText": {
+    "message": "Veuillez d'abord analyser vos favoris",
+    "description": "Empty state text"
+  },
+  "scanNowButton": {
+    "message": "Analyser Maintenant",
+    "description": "Scan now button"
+  },
+  "confirmCleanTitle": {
+    "message": "Confirmation de Nettoyage",
+    "description": "Confirm cleanup title"
+  },
+  "confirmCleanActionsTitle": {
+    "message": "Cette opération va :",
+    "description": "Titre avant les instructions d'opération de nettoyage"
+  },
+  "confirmCleanText": {
+    "message": "Êtes-vous sûr de vouloir nettoyer les $count$ favoris invalides sélectionnés ?",
+    "description": "Confirm cleanup text",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
+  "confirmCleanActions1": {
+    "message": "Sauvegarder les favoris actuels sur le bureau",
+    "description": "Confirm cleanup action 1"
+  },
+  "confirmCleanActions2": {
+    "message": "Supprimer les favoris invalides sélectionnés",
+    "description": "Confirm cleanup action 2"
+  },
+  "confirmCleanActions3": {
+    "message": "Cette action ne peut pas être annulée",
+    "description": "Confirm cleanup action 3"
+  },
+  "cancelButton": {
+    "message": "Annuler",
+    "description": "Cancel button"
+  },
+  "confirmCleanButton": {
+    "message": "Confirmer le Nettoyage",
+    "description": "Confirm cleanup button"
+  },
+  "cleanCompleteTitle": {
+    "message": "Nettoyage Terminé",
+    "description": "Cleanup complete title"
+  },
+  "cleanCompleteText": {
+    "message": "$count$ favoris invalides ont été nettoyés avec succès",
+    "description": "Cleanup complete text",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
+  "backupSavedText": {
+    "message": "Le fichier de sauvegarde a été enregistré sur votre bureau",
+    "description": "Backup saved text"
+  },
+  "closeButton": {
+    "message": "Fermer",
+    "description": "Close button"
+  },
+  "statusValid": {
+    "message": "Valide",
+    "description": "Valid status"
+  },
+  "statusInvalid": {
+    "message": "Invalide",
+    "description": "Invalid status"
+  },
+  "backupStartedAlert": {
+    "message": "La sauvegarde des favoris a commencé, veuillez vérifier votre liste de téléchargements",
+    "description": "Backup started alert"
+  },
+  "selectBookmarksToClean": {
+    "message": "Veuillez sélectionner les favoris à nettoyer",
+    "description": "Select bookmarks prompt"
+  },
+  "cleanErrorAlert": {
+    "message": "Erreur pendant le nettoyage: $error$",
+    "description": "Cleanup error alert",
+    "placeholders": {
+      "error": {
+        "content": "$1",
+        "example": "Erreur réseau"
+      }
+    }
+  },
+  "bookmarksHtmlTitle": {
+    "message": "Sauvegarde des Favoris",
+    "description": "Bookmark HTML backup title"
+  },
+  "untitledFolder": {
+    "message": "Dossier Sans Nom",
+    "description": "Untitled folder"
+  },
+  "untitledBookmark": {
+    "message": "Favori Sans Nom",
+    "description": "Untitled bookmark"
+  },
+  "otherBookmarks": {
+    "message": "Autres Favoris",
+    "description": "Other bookmarks"
+  },
+  "preparingScan": {
+    "message": "Préparation à l'analyse de $count$ favoris...",
+    "description": "Preparing scan",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "100"
+      }
+    }
+  },
+  "scanningProgress": {
+    "message": "$current$/$total$ - $title$ - $url$ ($invalid$ liens invalides trouvés)",
+    "description": "Scanning progress",
+    "placeholders": {
+      "current": {
+        "content": "$1",
+        "example": "50"
+      },
+      "total": {
+        "content": "$2",
+        "example": "100"
+      },
+      "title": {
+        "content": "$3",
+        "example": "Google"
+      },
+      "url": {
+        "content": "$4",
+        "example": "https://www.google.com"
+      },
+      "invalid": {
+        "content": "$5",
+        "example": "5"
+      }
+    }
+  },
+  "scanFailed": {
+    "message": "Analyse échouée: $error$",
+    "description": "Scan failed",
+    "placeholders": {
+      "error": {
+        "content": "$1",
+        "example": "Erreur réseau"
+      }
+    }
+  },
+  "folderStats": {
+    "message": "$invalid$/$total$ invalides",
+    "description": "Statistiques du dossier",
+    "placeholders": {
+      "invalid": {
+        "content": "$1",
+        "example": "2"
+      },
+      "total": {
+        "content": "$2",
+        "example": "10"
+      }
+    }
+  },
+  "currentBookmarkLabel": {
+    "message": "Favori actuel: ",
+    "description": "Étiquette du favori actuel"
+  },
+  "urlLabel": {
+    "message": "URL: ",
+    "description": "Étiquette URL"
+  },
+  "invalidLinksLabel": {
+    "message": "Liens invalides trouvés: ",
+    "description": "Étiquette des liens invalides trouvés"
+  },
+  "backupInProgress": {
+    "message": "Sauvegarde des favoris en cours, le fichier sera automatiquement téléchargé dans votre dossier Téléchargements",
+    "description": "Message de sauvegarde en cours"
+  },
+  "backupFailed": {
+    "message": "Échec de la sauvegarde des favoris, veuillez réessayer plus tard",
+    "description": "Message d'échec de sauvegarde"
+  },
+  "backupSuccess": {
+    "message": "Sauvegarde des favoris réussie",
+    "description": "Message de réussite de sauvegarde"
+  },
+  "backupEmpty": {
+    "message": "Aucun contenu de favori trouvé à sauvegarder",
+    "description": "Message de contenu de sauvegarde vide"
+  }
+}

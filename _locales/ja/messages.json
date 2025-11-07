@@ -1,0 +1,312 @@
+{
+  "extensionName": {
+    "message": "ブックマーククリーナー",
+    "description": "Extension name"
+  },
+  "extensionDescription": {
+    "message": "アクセスできないブックマークを検出・削除",
+    "description": "Extension description"
+  },
+  "popupTitle": {
+    "message": "ブックマーククリーナー",
+    "description": "Popup title"
+  },
+  "scanButton": {
+    "message": "ブックマークをスキャン",
+    "description": "Scan button"
+  },
+  "scanningButton": {
+    "message": "スキャン中...",
+    "description": "Scanning button"
+  },
+  "rescanButton": {
+    "message": "再スキャン",
+    "description": "Rescan button"
+  },
+  "viewResultsButton": {
+    "message": "スキャン結果を表示",
+    "description": "View results button"
+  },
+  "cleanButton": {
+    "message": "無効なリンクを削除",
+    "description": "Clean button"
+  },
+  "readyStatus": {
+    "message": "準備完了",
+    "description": "Ready status"
+  },
+  "gettingBookmarks": {
+    "message": "ブックマークを取得中...",
+    "description": "Retrieving bookmarks"
+  },
+  "scanComplete": {
+    "message": "スキャン完了: $count$ 件の無効なリンクを検出",
+    "description": "Scan complete status",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
+  "resultsPageTitle": {
+    "message": "ブックマークスキャン結果",
+    "description": "Results page title"
+  },
+  "resultsPageHeader": {
+    "message": "ブックマークスキャン結果",
+    "description": "Results page header"
+  },
+  "refreshButton": {
+    "message": "再スキャン",
+    "description": "Refresh button"
+  },
+  "loadingResults": {
+    "message": "スキャン結果を読み込んでいます...",
+    "description": "Loading results"
+  },
+  "totalBookmarks": {
+    "message": "合計: $count$ 件のブックマーク",
+    "description": "Total bookmarks",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "100"
+      }
+    }
+  },
+  "invalidBookmarks": {
+    "message": "無効: $count$ 件のブックマーク",
+    "description": "Invalid bookmarks",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
+  "validBookmarks": {
+    "message": "有効: $count$ 件のブックマーク",
+    "description": "Valid bookmarks",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "95"
+      }
+    }
+  },
+  "selectAllInvalid": {
+    "message": "すべての無効なリンクを選択",
+    "description": "Select all invalid links"
+  },
+  "backupButton": {
+    "message": "現在のブックマークをバックアップ",
+    "description": "Backup button"
+  },
+  "emptyStateIcon": {
+    "message": "📋",
+    "description": "Empty state icon"
+  },
+  "emptyStateTitle": {
+    "message": "スキャン結果がありません",
+    "description": "Empty state title"
+  },
+  "emptyStateText": {
+    "message": "まずブックマークをスキャンしてください",
+    "description": "Empty state text"
+  },
+  "scanNowButton": {
+    "message": "今すぐスキャン",
+    "description": "Scan now button"
+  },
+  "confirmCleanTitle": {
+    "message": "削除の確認",
+    "description": "Confirm cleanup title"
+  },
+  "confirmCleanActionsTitle": {
+    "message": "この操作により：",
+    "description": "クリーンアップ操作の説明の前のタイトル"
+  },
+  "confirmCleanText": {
+    "message": "選択した $count$ 件の無効なブックマークを削除しますか？",
+    "description": "Confirm cleanup text",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
+  "confirmCleanActions1": {
+    "message": "現在のブックマークをデスクトップにバックアップ",
+    "description": "Confirm cleanup action 1"
+  },
+  "confirmCleanActions2": {
+    "message": "選択した無効なブックマークを削除",
+    "description": "Confirm cleanup action 2"
+  },
+  "confirmCleanActions3": {
+    "message": "この操作は取り消せません",
+    "description": "Confirm cleanup action 3"
+  },
+  "cancelButton": {
+    "message": "キャンセル",
+    "description": "Cancel button"
+  },
+  "confirmCleanButton": {
+    "message": "削除を確定",
+    "description": "Confirm cleanup button"
+  },
+  "cleanCompleteTitle": {
+    "message": "削除完了",
+    "description": "Cleanup complete title"
+  },
+  "cleanCompleteText": {
+    "message": "$count$ 件の無効なブックマークを正常に削除しました",
+    "description": "Cleanup complete text",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
+  "backupSavedText": {
+    "message": "バックアップファイルがデスクトップに保存されました",
+    "description": "Backup saved text"
+  },
+  "closeButton": {
+    "message": "閉じる",
+    "description": "Close button"
+  },
+  "statusValid": {
+    "message": "有効",
+    "description": "Valid status"
+  },
+  "statusInvalid": {
+    "message": "無効",
+    "description": "Invalid status"
+  },
+  "backupStartedAlert": {
+    "message": "ブックマークのバックアップを開始しました。ダウンロードリストを確認してください",
+    "description": "Backup started alert"
+  },
+  "selectBookmarksToClean": {
+    "message": "削除するブックマークを選択してください",
+    "description": "Select bookmarks prompt"
+  },
+  "cleanErrorAlert": {
+    "message": "削除中にエラーが発生しました: $error$",
+    "description": "Cleanup error alert",
+    "placeholders": {
+      "error": {
+        "content": "$1",
+        "example": "ネットワークエラー"
+      }
+    }
+  },
+  "bookmarksHtmlTitle": {
+    "message": "ブックマークバックアップ",
+    "description": "Bookmark HTML backup title"
+  },
+  "untitledFolder": {
+    "message": "名前なしフォルダ",
+    "description": "Untitled folder"
+  },
+  "untitledBookmark": {
+    "message": "名前なしブックマーク",
+    "description": "Untitled bookmark"
+  },
+  "otherBookmarks": {
+    "message": "その他のブックマーク",
+    "description": "Other bookmarks"
+  },
+  "preparingScan": {
+    "message": "$count$ 件のブックマークをスキャン準備中...",
+    "description": "Preparing scan",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "100"
+      }
+    }
+  },
+  "scanningProgress": {
+    "message": "$current$/$total$ - $title$ - $url$ (無効なリンクを $invalid$ 件検出)",
+    "description": "Scanning progress",
+    "placeholders": {
+      "current": {
+        "content": "$1",
+        "example": "50"
+      },
+      "total": {
+        "content": "$2",
+        "example": "100"
+      },
+      "title": {
+        "content": "$3",
+        "example": "Google"
+      },
+      "url": {
+        "content": "$4",
+        "example": "https://www.google.com"
+      },
+      "invalid": {
+        "content": "$5",
+        "example": "5"
+      }
+    }
+  },
+  "scanFailed": {
+    "message": "スキャンに失敗しました: $error$",
+    "description": "Scan failed",
+    "placeholders": {
+      "error": {
+        "content": "$1",
+        "example": "ネットワークエラー"
+      }
+    }
+  },
+  "folderStats": {
+    "message": "$invalid$/$total$ 無効",
+    "description": "フォルダ統計",
+    "placeholders": {
+      "invalid": {
+        "content": "$1",
+        "example": "2"
+      },
+      "total": {
+        "content": "$2",
+        "example": "10"
+      }
+    }
+  },
+  "currentBookmarkLabel": {
+    "message": "現在のブックマーク: ",
+    "description": "現在のブックマークラベル"
+  },
+  "urlLabel": {
+    "message": "URL: ",
+    "description": "URLラベル"
+  },
+  "invalidLinksLabel": {
+    "message": "検出された無効なリンク: ",
+    "description": "検出された無効なリンクラベル"
+  },
+  "backupInProgress": {
+    "message": "ブックマークのバックアップ中です。ファイルは自動的にダウンロードフォルダに保存されます",
+    "description": "バックアップ進行中メッセージ"
+  },
+  "backupFailed": {
+    "message": "ブックマークのバックアップに失敗しました。後でもう一度お試しください",
+    "description": "バックアップ失敗メッセージ"
+  },
+  "backupSuccess": {
+    "message": "ブックマークのバックアップに成功しました",
+    "description": "バックアップ成功メッセージ"
+  },
+  "backupEmpty": {
+    "message": "バックアップするブックマークの内容が見つかりませんでした",
+    "description": "バックアップ内容空メッセージ"
+  }
+}

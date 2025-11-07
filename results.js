@@ -1,4 +1,27 @@
 document.addEventListener('DOMContentLoaded', function() {
+  // 设置国际化文本
+  document.getElementById('pageTitle').textContent = chrome.i18n.getMessage('resultsPageTitle');
+  document.getElementById('pageHeader').textContent = chrome.i18n.getMessage('resultsPageHeader');
+  document.getElementById('refreshBtn').textContent = chrome.i18n.getMessage('refreshButton');
+  document.getElementById('loadingState').textContent = chrome.i18n.getMessage('loadingResults');
+  document.getElementById('selectAllLabel').textContent = chrome.i18n.getMessage('selectAllInvalid');
+  document.getElementById('backupBtn').textContent = chrome.i18n.getMessage('backupButton');
+  document.getElementById('cleanBtn').textContent = chrome.i18n.getMessage('cleanButton');
+  document.getElementById('emptyStateIcon').textContent = chrome.i18n.getMessage('emptyStateIcon');
+  document.getElementById('emptyStateTitle').textContent = chrome.i18n.getMessage('emptyStateTitle');
+  document.getElementById('emptyStateText').textContent = chrome.i18n.getMessage('emptyStateText');
+  document.getElementById('scanNowBtn').textContent = chrome.i18n.getMessage('scanNowButton');
+  document.getElementById('confirmCleanTitle').textContent = chrome.i18n.getMessage('confirmCleanTitle');
+  document.getElementById('confirmCleanActionsTitle').textContent = chrome.i18n.getMessage('confirmCleanActionsTitle');
+  document.getElementById('cancelBtn').textContent = chrome.i18n.getMessage('cancelButton');
+  document.getElementById('confirmCleanBtn').textContent = chrome.i18n.getMessage('confirmCleanButton');
+  document.getElementById('cleanCompleteTitle').textContent = chrome.i18n.getMessage('cleanCompleteTitle');
+  document.getElementById('closeResultBtn').textContent = chrome.i18n.getMessage('closeButton');
+  document.getElementById('confirmCleanAction1').textContent = chrome.i18n.getMessage('confirmCleanActions1');
+  document.getElementById('confirmCleanAction2').textContent = chrome.i18n.getMessage('confirmCleanActions2');
+  document.getElementById('confirmCleanAction3').textContent = chrome.i18n.getMessage('confirmCleanActions3');
+  document.getElementById('backupSavedText').textContent = chrome.i18n.getMessage('backupSavedText');
+  
   // DOM元素
   const loadingState = document.getElementById('loadingState');
   const resultsContainer = document.getElementById('resultsContainer');
@@ -9,8 +32,8 @@ document.addEventListener('DOMContentLoaded', function() {
   const backupBtn = document.getElementById('backupBtn');
   const confirmModal = document.getElementById('confirmModal');
   const resultModal = document.getElementById('resultModal');
-  const confirmCount = document.getElementById('confirmCount');
-  const cleanedCount = document.getElementById('cleanedCount');
+  const confirmCleanText = document.getElementById('confirmCleanText'); // 修正变量名
+  const cleanCompleteText = document.getElementById('cleanCompleteText'); // 修正变量名
   
   let scanResults = [];
   let isAutoClean = false; // 用于标识是否自动进入清理模式
@@ -55,12 +78,21 @@ document.addEventListener('DOMContentLoaded', function() {
   // 监听来自background的消息
   chrome.runtime.onMessage.addListener(function(message) {
     if (message.type === 'cleanComplete') {
-      hideConfirmDialog();
-      cleanedCount.textContent = message.removedCount;
-      resultModal.style.display = 'block';
+        hideConfirmDialog();
+        cleanCompleteText.textContent = chrome.i18n.getMessage('cleanCompleteText', [message.removedCount]);
+        resultModal.style.display = 'block';
     } else if (message.type === 'cleanError') {
       hideConfirmDialog();
-      alert('清理过程中出错: ' + message.error);
+      alert(chrome.i18n.getMessage('cleanError') + message.error);
+    } else if (message.type === 'backupComplete') {
+      // 处理备份完成消息
+      if (message.status === 'success') {
+        alert(chrome.i18n.getMessage('backupSuccess') || message.message || '书签备份成功');
+      } else if (message.status === 'empty') {
+        alert(chrome.i18n.getMessage('backupEmpty') || message.message || '没有找到可备份的书签内容');
+      } else if (message.status === 'error') {
+        alert(chrome.i18n.getMessage('backupFailed') || message.message || '书签备份失败');
+      }
     }
   });
   
@@ -89,13 +121,13 @@ document.addEventListener('DOMContentLoaded', function() {
   // 显示结果
   function displayResults() {
     // 更新统计数据
-    const totalCount = scanResults.length;
-    const invalidCount = scanResults.filter(item => !item.isValid).length;
-    const validCount = totalCount - invalidCount;
-    
-    document.getElementById('totalCount').textContent = totalCount;
-    document.getElementById('invalidCount').textContent = invalidCount;
-    document.getElementById('validCount').textContent = validCount;
+const totalCount = scanResults.length;
+const invalidCount = scanResults.filter(item => !item.isValid).length;
+const validCount = totalCount - invalidCount;
+
+document.getElementById('totalText').textContent = chrome.i18n.getMessage('totalBookmarks', [totalCount]);
+document.getElementById('invalidText').textContent = chrome.i18n.getMessage('invalidBookmarks', [invalidCount]);
+document.getElementById('validText').textContent = chrome.i18n.getMessage('validBookmarks', [validCount]);
     
     // 清空列表
     bookmarkList.innerHTML = '';
@@ -198,7 +230,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     const status = document.createElement('div');
     status.className = `bookmark-status ${bookmark.isValid ? 'status-valid' : 'status-invalid'}`;
-    status.textContent = bookmark.isValid ? '正常' : '失效';
+    status.textContent = bookmark.isValid ? chrome.i18n.getMessage('statusValid') : chrome.i18n.getMessage('statusInvalid');
     
     // 添加点击事件，在item上创建一个可点击的链接
     item.style.cursor = 'pointer';
@@ -241,8 +273,15 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // 备份书签
   function backupBookmarks() {
-    chrome.runtime.sendMessage({ type: 'backupBookmarks' });
-    alert('收藏夹备份已开始，请查看下载列表');
+    chrome.runtime.sendMessage({ type: 'backupBookmarks' }, function(response) {
+      if (chrome.runtime.lastError) {
+        console.error('备份请求发送失败:', chrome.runtime.lastError);
+        alert(chrome.i18n.getMessage('backupFailed') || '备份失败，请稍后重试');
+      } else if (response && response.started) {
+        // 显示更明确的备份进行中消息，而不是简单的'备份已开始'
+        alert(chrome.i18n.getMessage('backupInProgress') || '书签备份正在进行中，文件将自动下载到您的下载文件夹');
+      }
+    });
   }
   
   // 显示确认对话框
@@ -251,11 +290,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const count = checkboxes.length;
     
     if (count === 0) {
-      alert('请选择要清理的书签');
+      alert(chrome.i18n.getMessage('selectBookmarksToClean'));
       return;
     }
     
-    confirmCount.textContent = count;
+    confirmCleanText.textContent = chrome.i18n.getMessage('confirmCleanText', [count]);
     confirmModal.style.display = 'block';
   }
   

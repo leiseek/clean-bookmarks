@@ -1,0 +1,312 @@
+{
+  "extensionName": {
+    "message": "북마크 정리기",
+    "description": "Extension name"
+  },
+  "extensionDescription": {
+    "message": "접근할 수 없는 북마크를 검사하고 정리합니다",
+    "description": "Extension description"
+  },
+  "popupTitle": {
+    "message": "북마크 정리기",
+    "description": "Popup title"
+  },
+  "scanButton": {
+    "message": "북마크 스캔",
+    "description": "Scan button"
+  },
+  "scanningButton": {
+    "message": "스캔 중...",
+    "description": "Scanning button"
+  },
+  "rescanButton": {
+    "message": "다시 스캔",
+    "description": "Rescan button"
+  },
+  "viewResultsButton": {
+    "message": "스캔 결과 보기",
+    "description": "View results button"
+  },
+  "cleanButton": {
+    "message": "유효하지 않은 링크 정리",
+    "description": "Clean button"
+  },
+  "readyStatus": {
+    "message": "준비 완료",
+    "description": "Ready status"
+  },
+  "gettingBookmarks": {
+    "message": "북마크 가져오는 중...",
+    "description": "Retrieving bookmarks"
+  },
+  "scanComplete": {
+    "message": "스캔 완료: $count$ 개의 유효하지 않은 링크 발견",
+    "description": "Scan complete status",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
+  "resultsPageTitle": {
+    "message": "북마크 스캔 결과",
+    "description": "Results page title"
+  },
+  "resultsPageHeader": {
+    "message": "북마크 스캔 결과",
+    "description": "Results page header"
+  },
+  "refreshButton": {
+    "message": "다시 스캔",
+    "description": "Refresh button"
+  },
+  "loadingResults": {
+    "message": "스캔 결과 로드 중...",
+    "description": "Loading results"
+  },
+  "totalBookmarks": {
+    "message": "총계: $count$ 개의 북마크",
+    "description": "Total bookmarks",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "100"
+      }
+    }
+  },
+  "invalidBookmarks": {
+    "message": "유효하지 않음: $count$ 개의 북마크",
+    "description": "Invalid bookmarks",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
+  "validBookmarks": {
+    "message": "유효함: $count$ 개의 북마크",
+    "description": "Valid bookmarks",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "95"
+      }
+    }
+  },
+  "selectAllInvalid": {
+    "message": "모든 유효하지 않은 링크 선택",
+    "description": "Select all invalid links"
+  },
+  "backupButton": {
+    "message": "현재 북마크 백업",
+    "description": "Backup button"
+  },
+  "emptyStateIcon": {
+    "message": "📋",
+    "description": "Empty state icon"
+  },
+  "emptyStateTitle": {
+    "message": "스캔 결과가 없습니다",
+    "description": "Empty state title"
+  },
+  "emptyStateText": {
+    "message": "먼저 북마크를 스캔하세요",
+    "description": "Empty state text"
+  },
+  "scanNowButton": {
+    "message": "지금 스캔",
+    "description": "Scan now button"
+  },
+  "confirmCleanTitle": {
+    "message": "정리 확인",
+    "description": "Confirm cleanup title"
+  },
+  "confirmCleanActionsTitle": {
+    "message": "이 작업은 다음을 수행합니다:",
+    "description": "정리 작업 설명 앞의 제목"
+  },
+  "confirmCleanText": {
+    "message": "선택한 $count$ 개의 유효하지 않은 북마크를 정리하시겠습니까?",
+    "description": "Confirm cleanup text",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
+  "confirmCleanActions1": {
+    "message": "현재 북마크를 바탕화면에 백업합니다",
+    "description": "Confirm cleanup action 1"
+  },
+  "confirmCleanActions2": {
+    "message": "선택한 유효하지 않은 북마크를 삭제합니다",
+    "description": "Confirm cleanup action 2"
+  },
+  "confirmCleanActions3": {
+    "message": "이 작업은 취소할 수 없습니다",
+    "description": "Confirm cleanup action 3"
+  },
+  "cancelButton": {
+    "message": "취소",
+    "description": "Cancel button"
+  },
+  "confirmCleanButton": {
+    "message": "정리 확인",
+    "description": "Confirm cleanup button"
+  },
+  "cleanCompleteTitle": {
+    "message": "정리 완료",
+    "description": "Cleanup complete title"
+  },
+  "cleanCompleteText": {
+    "message": "$count$ 개의 유효하지 않은 북마크를 성공적으로 정리했습니다",
+    "description": "Cleanup complete text",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
+  "backupSavedText": {
+    "message": "백업 파일이 바탕화면에 저장되었습니다",
+    "description": "Backup saved text"
+  },
+  "closeButton": {
+    "message": "닫기",
+    "description": "Close button"
+  },
+  "statusValid": {
+    "message": "유효함",
+    "description": "Valid status"
+  },
+  "statusInvalid": {
+    "message": "유효하지 않음",
+    "description": "Invalid status"
+  },
+  "backupStartedAlert": {
+    "message": "북마크 백업이 시작되었습니다. 다운로드 목록을 확인하세요",
+    "description": "Backup started alert"
+  },
+  "selectBookmarksToClean": {
+    "message": "정리할 북마크를 선택하세요",
+    "description": "Select bookmarks prompt"
+  },
+  "cleanErrorAlert": {
+    "message": "정리 중 오류 발생: $error$",
+    "description": "Cleanup error alert",
+    "placeholders": {
+      "error": {
+        "content": "$1",
+        "example": "네트워크 오류"
+      }
+    }
+  },
+  "bookmarksHtmlTitle": {
+    "message": "북마크 백업",
+    "description": "Bookmark HTML backup title"
+  },
+  "untitledFolder": {
+    "message": "제목 없는 폴더",
+    "description": "Untitled folder"
+  },
+  "untitledBookmark": {
+    "message": "제목 없는 북마크",
+    "description": "Untitled bookmark"
+  },
+  "otherBookmarks": {
+    "message": "기타 북마크",
+    "description": "Other bookmarks"
+  },
+  "preparingScan": {
+    "message": "$count$ 개의 북마크 스캔 준비 중...",
+    "description": "Preparing scan",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "100"
+      }
+    }
+  },
+  "scanningProgress": {
+    "message": "$current$/$total$ - $title$ - $url$ (유효하지 않은 링크 $invalid$ 개 발견)",
+    "description": "Scanning progress",
+    "placeholders": {
+      "current": {
+        "content": "$1",
+        "example": "50"
+      },
+      "total": {
+        "content": "$2",
+        "example": "100"
+      },
+      "title": {
+        "content": "$3",
+        "example": "Google"
+      },
+      "url": {
+        "content": "$4",
+        "example": "https://www.google.com"
+      },
+      "invalid": {
+        "content": "$5",
+        "example": "5"
+      }
+    }
+  },
+  "scanFailed": {
+    "message": "스캔 실패: $error$",
+    "description": "Scan failed",
+    "placeholders": {
+      "error": {
+        "content": "$1",
+        "example": "네트워크 오류"
+      }
+    }
+  },
+  "folderStats": {
+    "message": "$invalid$/$total$ 유효하지 않음",
+    "description": "폴더 통계",
+    "placeholders": {
+      "invalid": {
+        "content": "$1",
+        "example": "2"
+      },
+      "total": {
+        "content": "$2",
+        "example": "10"
+      }
+    }
+  },
+  "currentBookmarkLabel": {
+    "message": "현재 북마크: ",
+    "description": "현재 북마크 레이블"
+  },
+  "urlLabel": {
+    "message": "URL: ",
+    "description": "URL 레이블"
+  },
+  "invalidLinksLabel": {
+    "message": "발견된 유효하지 않은 링크: ",
+    "description": "발견된 유효하지 않은 링크 레이블"
+  },
+  "backupInProgress": {
+    "message": "북마크 백업이 진행 중입니다. 파일이 다운로드 폴더에 자동으로 저장됩니다",
+    "description": "백업 진행 중 메시지"
+  },
+  "backupFailed": {
+    "message": "북마크 백업에 실패했습니다. 나중에 다시 시도하세요",
+    "description": "백업 실패 메시지"
+  },
+  "backupSuccess": {
+    "message": "북마크 백업에 성공했습니다",
+    "description": "백업 성공 메시지"
+  },
+  "backupEmpty": {
+    "message": "백업할 북마크 내용을 찾을 수 없습니다",
+    "description": "백업 내용 비어있음 메시지"
+  }
+}

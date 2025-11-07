@@ -2,170 +2,281 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>收藏夹扫描结果</title>
+  <title id="pageTitle"></title>
   <style>
+    /* iOS液体玻璃风格基础样式 */
+    :root {
+      --primary-color: #007AFF;
+      --secondary-color: #5AC8FA;
+      --success-color: #34C759;
+      --danger-color: #FF3B30;
+      --warning-color: #FF9500;
+      --light-bg: rgba(255, 255, 255, 0.7);
+      --dark-bg: rgba(0, 0, 0, 0.1);
+      --border-color: rgba(255, 255, 255, 0.5);
+    }
+    
     body {
-      font-family: Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
       margin: 0;
       padding: 20px;
-      background-color: #f5f5f5;
+      background: linear-gradient(135deg, #E8F5E9 0%, #E0F7FA 50%, #F3E5F5 100%);
+      min-height: 100vh;
+      overflow-x: hidden;
     }
+    
     .container {
       max-width: 1000px;
       margin: 0 auto;
-      background-color: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      background: var(--light-bg);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      padding: 25px;
+      border-radius: 20px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
     }
+    
     .header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 20px;
-      border-bottom: 1px solid #eee;
-      padding-bottom: 15px;
-    }
-    .summary {
-      margin-bottom: 20px;
-    }
-    .summary-item {
-      display: inline-block;
-      margin-right: 30px;
-      padding: 10px 15px;
-      background-color: #f1f8ff;
-      border-radius: 4px;
-    }
-    .summary-item.invalid {
-      background-color: #fff2f2;
-      color: #d32f2f;
-    }
-    .bookmark-list {
-      margin-top: 20px;
-    }
-    .folder-section {
       margin-bottom: 25px;
-      border: 1px solid #e0e0e0;
-      border-radius: 8px;
-      overflow: hidden;
+      padding-bottom: 15px;
+      border-bottom: 1px solid var(--border-color);
     }
+    
+    .header h1 {
+      font-size: 24px;
+      font-weight: 600;
+      color: #333;
+      margin: 0;
+      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    
+    .summary {
+      margin-bottom: 25px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    
+    .summary-item {
+      padding: 12px 20px;
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 15px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+    }
+    
+    .summary-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+    }
+    
+    .summary-item.invalid {
+      background: rgba(255, 59, 48, 0.1);
+      color: var(--danger-color);
+    }
+    
+    .bookmark-list {
+      margin-top: 25px;
+    }
+    
+    .folder-section {
+      margin-bottom: 30px;
+      border-radius: 15px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.8);
+      border: 1px solid var(--border-color);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+    
     .folder-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 12px 15px;
-      background-color: #f5f5f5;
-      border-bottom: 1px solid #e0e0e0;
+      padding: 15px 20px;
+      background: linear-gradient(135deg, rgba(0, 122, 255, 0.1), rgba(90, 200, 250, 0.1));
+      border-bottom: 1px solid var(--border-color);
     }
+    
     .folder-title {
       margin: 0;
-      font-size: 16px;
-      font-weight: bold;
+      font-size: 18px;
+      font-weight: 600;
       color: #333;
     }
+    
     .folder-stats {
-      font-size: 12px;
-      color: #666;
-      background-color: #eee;
-      padding: 3px 8px;
-      border-radius: 12px;
+      font-size: 13px;
+      color: var(--primary-color);
+      background: var(--light-bg);
+      padding: 5px 12px;
+      border-radius: 15px;
+      border: 1px solid var(--border-color);
     }
+    
     .bookmark-item {
       display: flex;
       align-items: center;
-      padding: 15px;
-      border-bottom: 1px solid #e0e0e0;
-      transition: all 0.2s;
+      padding: 15px 20px;
+      border-bottom: 1px solid var(--border-color);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
     }
+    
+    .bookmark-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 0;
+      height: 100%;
+      background: rgba(0, 122, 255, 0.05);
+      transition: width 0.3s ease;
+    }
+    
     .bookmark-item:last-child {
       border-bottom: none;
     }
+    
     .bookmark-item {
       cursor: pointer;
     }
+    
     .bookmark-item:hover {
-      background-color: #f9f9f9;
+      background-color: rgba(248, 248, 248, 0.8);
     }
+    
+    .bookmark-item:hover::before {
+      width: 100%;
+    }
+    
     .bookmark-title:hover {
-      color: #4285f4;
-      text-decoration: underline;
+      color: var(--primary-color);
+      text-decoration: none;
+      transform: translateX(2px);
     }
+    
     .bookmark-item.invalid {
-      border-left: 4px solid #f44336;
-      background-color: #fff2f2;
+      background-color: rgba(255, 59, 48, 0.05);
+      border-left: 4px solid var(--danger-color);
     }
+    
     .bookmark-item.invalid:hover {
-      background-color: #ffebee;
+      background-color: rgba(255, 59, 48, 0.1);
     }
+    
     .bookmark-checkbox {
       margin-right: 15px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 2px solid var(--primary-color);
+      accent-color: var(--primary-color);
     }
+    
     .bookmark-info {
       flex-grow: 1;
+      transition: transform 0.2s ease;
     }
+    
     .bookmark-title {
-      font-weight: bold;
+      font-weight: 500;
       margin-bottom: 5px;
       color: #333;
+      font-size: 15px;
+      transition: all 0.2s ease;
     }
+    
     .bookmark-url {
       color: #666;
-      font-size: 12px;
+      font-size: 13px;
       word-break: break-all;
+      opacity: 0.8;
     }
+    
     .bookmark-status {
-      margin-left: 15px;
-      padding: 5px 10px;
-      border-radius: 4px;
-      font-size: 12px;
-      font-weight: bold;
+      margin-left: 20px;
+      padding: 8px 15px;
+      border-radius: 15px;
+      font-size: 13px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      border: 1px solid var(--border-color);
     }
+    
     .status-valid {
-      background-color: #e8f5e9;
-      color: #2e7d32;
+      background-color: rgba(52, 199, 89, 0.1);
+      color: var(--success-color);
     }
+    
     .status-invalid {
-      background-color: #ffebee;
-      color: #c62828;
+      background-color: rgba(255, 59, 48, 0.1);
+      color: var(--danger-color);
     }
+    
     .action-bar {
-      margin-top: 20px;
+      margin-top: 30px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding-top: 15px;
-      border-top: 1px solid #eee;
+      padding-top: 20px;
+      border-top: 1px solid var(--border-color);
     }
+    
     .checkbox-wrapper {
       display: flex;
       align-items: center;
     }
+    
     .btn {
       padding: 10px 20px;
       border: none;
-      border-radius: 4px;
+      border-radius: 12px;
       cursor: pointer;
-      font-weight: bold;
+      font-weight: 500;
       margin-left: 10px;
+      transition: all 0.3s ease;
+      font-size: 14px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
+    
     .btn-primary {
-      background-color: #4285f4;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
       color: white;
     }
-    .btn-primary:hover {
-      background-color: #3367d6;
+    
+    .btn-primary:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0, 122, 255, 0.4);
     }
+    
     .btn-danger {
-      background-color: #f44336;
+      background: linear-gradient(135deg, var(--danger-color), #FF6B6B);
       color: white;
     }
-    .btn-danger:hover {
-      background-color: #d32f2f;
+    
+    .btn-danger:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(255, 59, 48, 0.4);
     }
-    .btn-danger:disabled {
-      background-color: #cccccc;
+    
+    .btn-danger:disabled,
+    .btn:disabled {
+      background: var(--dark-bg);
+      color: rgba(0, 0, 0, 0.4);
       cursor: not-allowed;
+      box-shadow: none;
     }
+    
     .modal {
       display: none;
       position: fixed;
@@ -174,73 +285,162 @@
       top: 0;
       width: 100%;
       height: 100%;
-      background-color: rgba(0,0,0,0.5);
+      background-color: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      transition: all 0.3s ease;
     }
+    
     .modal-content {
-      background-color: white;
-      margin: 15% auto;
-      padding: 20px;
-      border-radius: 8px;
+      background: var(--light-bg);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      margin: 10% auto;
+      padding: 25px;
+      border-radius: 20px;
       width: 500px;
       max-width: 90%;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      animation: modalSlideIn 0.3s ease-out;
     }
+    
+    @keyframes modalSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+    
     .modal-header {
-      margin-bottom: 15px;
-    }
-    .modal-body {
       margin-bottom: 20px;
     }
+    
+    .modal-header h2 {
+      font-size: 20px;
+      font-weight: 600;
+      color: #333;
+      margin: 0;
+    }
+    
+    .modal-body {
+      margin-bottom: 25px;
+    }
+    
     .modal-footer {
       text-align: right;
     }
+    
     .loading {
       text-align: center;
-      padding: 20px;
-      color: #666;
+      padding: 30px;
+      color: #555;
+      font-size: 16px;
     }
+    
     .empty-state {
       text-align: center;
-      padding: 40px 20px;
-      color: #666;
+      padding: 50px 20px;
+      color: #555;
     }
+    
     .empty-state-icon {
-      font-size: 48px;
-      margin-bottom: 15px;
+      font-size: 64px;
+      margin-bottom: 20px;
+      opacity: 0.8;
+    }
+    
+    /* 复选框美化 */
+    #selectAll {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 2px solid var(--primary-color);
+      accent-color: var(--primary-color);
+      margin-right: 10px;
+    }
+    
+    /* 滚动条美化 */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.5);
+      border-radius: 10px;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: rgba(0, 122, 255, 0.3);
+      border-radius: 10px;
+      transition: background 0.3s ease;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(0, 122, 255, 0.5);
+    }
+    
+    /* 响应式设计 */
+    @media (max-width: 768px) {
+      .container {
+        padding: 20px;
+        border-radius: 15px;
+      }
+      
+      .action-bar {
+        flex-direction: column;
+        gap: 15px;
+        align-items: stretch;
+      }
+      
+      .modal-content {
+        margin: 15% auto;
+        padding: 20px;
+      }
+      
+      .btn {
+        margin-left: 0;
+        margin-top: 10px;
+        width: 100%;
+      }
     }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="header">
-      <h1>收藏夹扫描结果</h1>
-      <button id="refreshBtn" class="btn btn-primary">重新扫描</button>
+      <h1 id="pageHeader"></h1>
+      <button id="refreshBtn" class="btn btn-primary"></button>
     </div>
     
-    <div id="loadingState" class="loading">
-      正在加载扫描结果...
-    </div>
+    <div id="loadingState" class="loading"></div>
     
     <div id="resultsContainer" style="display: none;">
       <div class="summary">
         <div class="summary-item">
-          总计: <span id="totalCount">0</span> 个书签
+          <span id="totalText"></span>
         </div>
         <div class="summary-item invalid">
-          失效: <span id="invalidCount">0</span> 个书签
+          <span id="invalidText"></span>
         </div>
         <div class="summary-item">
-          正常: <span id="validCount">0</span> 个书签
+          <span id="validText"></span>
         </div>
       </div>
       
       <div class="action-bar">
         <div class="checkbox-wrapper">
           <input type="checkbox" id="selectAll">
-          <label for="selectAll">全选失效链接</label>
+          <label for="selectAll" id="selectAllLabel"></label>
         </div>
         <div>
-          <button id="backupBtn" class="btn btn-primary">备份当前收藏夹</button>
-          <button id="cleanBtn" class="btn btn-danger" disabled>清理选中链接</button>
+          <button id="backupBtn" class="btn btn-primary"></button>
+          <button id="cleanBtn" class="btn btn-danger" disabled></button>
         </div>
       </div>
       
@@ -248,10 +448,10 @@
     </div>
     
     <div id="emptyState" class="empty-state" style="display: none;">
-      <div class="empty-state-icon">📋</div>
-      <h2>没有扫描结果</h2>
-      <p>请先进行收藏夹扫描</p>
-      <button id="scanNowBtn" class="btn btn-primary">立即扫描</button>
+      <div class="empty-state-icon" id="emptyStateIcon"></div>
+      <h2 id="emptyStateTitle"></h2>
+      <p id="emptyStateText"></p>
+      <button id="scanNowBtn" class="btn btn-primary"></button>
     </div>
   </div>
   
@@ -259,20 +459,20 @@
   <div id="confirmModal" class="modal">
     <div class="modal-content">
       <div class="modal-header">
-        <h2>确认清理</h2>
+        <h2 id="confirmCleanTitle"></h2>
       </div>
       <div class="modal-body">
-        <p>您确定要清理选中的 <span id="confirmCount">0</span> 个失效书签吗？</p>
-        <p>此操作将：</p>
+        <p id="confirmCleanText"></p>
+        <p id="confirmCleanActionsTitle"></p>
         <ul>
-          <li>备份当前收藏夹到桌面</li>
-          <li>删除选中的失效书签</li>
-          <li>此操作不可撤销</li>
+          <li id="confirmCleanAction1"></li>
+          <li id="confirmCleanAction2"></li>
+          <li id="confirmCleanAction3"></li>
         </ul>
       </div>
       <div class="modal-footer">
-        <button id="cancelBtn" class="btn">取消</button>
-        <button id="confirmCleanBtn" class="btn btn-danger">确认清理</button>
+        <button id="cancelBtn" class="btn"></button>
+        <button id="confirmCleanBtn" class="btn btn-danger"></button>
       </div>
     </div>
   </div>
@@ -281,18 +481,19 @@
   <div id="resultModal" class="modal">
     <div class="modal-content">
       <div class="modal-header">
-        <h2>清理完成</h2>
+        <h2 id="cleanCompleteTitle"></h2>
       </div>
       <div class="modal-body">
-        <p>已成功清理 <span id="cleanedCount">0</span> 个失效书签</p>
-        <p>备份文件已保存到您的桌面</p>
+        <p id="cleanCompleteText"></p>
+        <p id="backupSavedText"></p>
       </div>
       <div class="modal-footer">
-        <button id="closeResultBtn" class="btn btn-primary">关闭</button>
+        <button id="closeResultBtn" class="btn btn-primary"></button>
       </div>
     </div>
   </div>
   
+  <!-- 国际化文本设置已移至results.js文件 -->
   <script src="results.js"></script>
 </body>
 </html>
