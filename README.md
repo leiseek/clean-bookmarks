@@ -1,4 +1,5 @@
 # 收藏夹清理 - Chrome插件
+ 微软Edge插件商店地址： [https://microsoftedge.microsoft.com/addons/detail/bfplmmnmgnfelmjdabmgjpfafnocnhna](https://microsoftedge.microsoft.com/addons/detail/bfplmmnmgnfelmjdabmgjpfafnocnhna)
 
 ## 语言选择 / Language Selection
 - [中文(简体)](#收藏夹清理---chrome插件)
