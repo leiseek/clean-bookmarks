@@ -138,7 +138,7 @@
     }
   },
   "confirmCleanActions1": {
-    "message": "Sauvegarder les favoris actuels sur le bureau",
+    "message": "Enregistrer une sauvegarde complète dans le dossier de téléchargement et attendre sa fin avant toute suppression",
     "description": "Confirm cleanup action 1"
   },
   "confirmCleanActions2": {
@@ -172,7 +172,7 @@
     }
   },
   "backupSavedText": {
-    "message": "Le fichier de sauvegarde a été enregistré sur votre bureau",
+    "message": "La sauvegarde est enregistrée dans le dossier de téléchargement du navigateur. Consultez la liste des téléchargements.",
     "description": "Backup saved text"
   },
   "closeButton": {
@@ -308,5 +308,85 @@
   "backupEmpty": {
     "message": "Aucun contenu de favori trouvé à sauvegarder",
     "description": "Message de contenu de sauvegarde vide"
+  },
+  "statusUnknown": {
+    "description": "statusUnknown",
+    "message": "Indéterminé"
+  },
+  "statusSkipped": {
+    "description": "statusSkipped",
+    "message": "Ignoré"
+  },
+  "unknownBookmarks": {
+    "description": "unknownBookmarks",
+    "message": "À confirmer : $count$",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
+  "skippedBookmarks": {
+    "description": "skippedBookmarks",
+    "message": "Ignorés : $count$",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
+  "scanProgressLabel": {
+    "description": "scanProgressLabel",
+    "message": "Progression : "
+  },
+  "scanInterrupted": {
+    "description": "scanInterrupted",
+    "message": "La précédente analyse a été interrompue. Relancez-la."
+  },
+  "operationInterrupted": {
+    "description": "operationInterrupted",
+    "message": "La sauvegarde ou le nettoyage a été interrompu. Vérifiez les téléchargements et relancez une analyse."
+  },
+  "operationBusy": {
+    "description": "operationBusy",
+    "message": "Une analyse, sauvegarde ou suppression est en cours. Veuillez patienter."
+  },
+  "staleSelection": {
+    "description": "staleSelection",
+    "message": "Les favoris sélectionnés ont changé ou ne sont pas confirmés invalides. Relancez une analyse."
+  },
+  "cleaningInProgress": {
+    "description": "cleaningInProgress",
+    "message": "Sauvegarde et nettoyage en cours. Attente de la fin du téléchargement…"
+  },
+  "reasonUnsupportedProtocol": {
+    "description": "reasonUnsupportedProtocol",
+    "message": "Ce protocole est exclu des vérifications réseau et du nettoyage."
+  },
+  "reasonInvalidUrl": {
+    "description": "reasonInvalidUrl",
+    "message": "Format URL non reconnu. Vérifiez manuellement."
+  },
+  "reasonNetworkError": {
+    "description": "reasonNetworkError",
+    "message": "Échec réseau. Vérifiez manuellement ou réessayez plus tard."
+  },
+  "reasonTimeout": {
+    "description": "reasonTimeout",
+    "message": "Délai dépassé. Réessayez plus tard."
+  },
+  "reasonHttpError": {
+    "description": "reasonHttpError",
+    "message": "Statut HTTP inattendu : connexion, autorisations ou panne temporaire possibles."
+  },
+  "reasonUnreadableResponse": {
+    "description": "reasonUnreadableResponse",
+    "message": "Impossible de lire le statut de la réponse. Vérifiez manuellement."
+  },
+  "reasonLegacyResult": {
+    "description": "reasonLegacyResult",
+    "message": "Résultats d’une ancienne version : relancez une analyse avant le nettoyage."
   }
 }

@@ -1,118 +1,90 @@
-# Bookmarks Cleaner - Chrome Extension
-Microsoft Edge Add-ons Store: [https://microsoftedge.microsoft.com/addons/detail/bfplmmnmgnfelmjdabmgjpfafnocnhna](https://microsoftedge.microsoft.com/addons/detail/bfplmmnmgnfelmjdabmgjpfafnocnhna)
+# Bookmark Cleaner
 
-## Language Selection / 语言选择
-- [中文(简体)](README.md)
-- [English](#bookmarks-cleaner---chrome-extension)
-- [日本語](README-ja.md)
-- [한국어](README-ko.md)
-- [Français](README-fr.md)
-- [Español](README-es.md)
+Find broken bookmarks in Chrome and Microsoft Edge. Delete the links you confirm only after a full HTML backup has finished downloading.
 
-A useful Chrome extension for checking and cleaning inaccessible URLs in bookmarks.
+[简体中文](README.md) · **English** · [日本語](README-ja.md) · [한국어](README-ko.md) · [Français](README-fr.md) · [Español](README-es.md)
+
+[Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/bfplmmnmgnfelmjdabmgjpfafnocnhna) · [Report an issue](https://github.com/leiseek/clean-bookmarks/issues) · [License](LICENSE)
 
 ## Features
 
-- 🔍 **Bookmark Scanning**: Automatically detects if all URLs in bookmarks are accessible
-- 📊 **Result Display**: Clearly shows scan results, invalid links are marked with a醒目 style
-- ☑️ **Smart Selection**: Automatically selects invalid links, supports batch and individual selection
-- 💾 **Data Backup**: Automatically backs up current bookmark data to desktop before cleaning
-- 🗑️ **Safe Cleaning**: Requires user's secondary confirmation before cleaning to prevent mishandling
-- 🌐 **Multilingual Support**: Supports Chinese, English, Japanese, Korean, French and Spanish
+- Results grouped by folder, with HTTP status codes and reasons for uncertain results.
+- Four states: valid, invalid, unknown and skipped. Only confirmed HTTP 404/410 results can be selected for cleanup.
+- A full HTML backup before every cleanup, with deletion gated on download completion.
+- Scan progress survives closing the popup. Interrupted scans can be restarted.
+- Interface translations for Simplified Chinese, English, Japanese, Korean, French and Spanish.
+- Plain JavaScript and HTML, with no build step or third-party runtime dependencies.
 
-## Installation Method
+## Install
 
-1. Download or clone this project to your computer
-2. Open Chrome browser, go to extensions management page (`chrome://extensions/`)
-3. Enable "Developer mode" in the top right corner
-4. Click "Load unpacked"
-5. Select the folder of this project
-6. Installation completed, you can see the extension icon in the browser toolbar
+Install from [Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/bfplmmnmgnfelmjdabmgjpfafnocnhna), or load the source locally. The store release may differ from the main branch.
 
-## Usage Method
+For local installation, use Chrome 102+ or a recent Edge version supporting the same Manifest V3 APIs:
 
-1. **Scan Bookmarks**
-   - Click on the extension icon, click the "Scan Bookmarks" button in the popup window
-   - Wait for the scan to complete, it will display the scan progress and the number of problems found
+1. Download and extract this repository, or run `git clone https://github.com/leiseek/clean-bookmarks.git`.
+2. Open `chrome://extensions/` or `edge://extensions/`.
+3. Enable **Developer mode**, select **Load unpacked**, and choose the folder containing `manifest.json`.
 
-2. **View Scan Results**
-   - After the scan is complete, click the "View Scan Results" button
-   - You can see the status of all bookmarks on the results page
-   - Invalid links will be highlighted with a red border and background
+After changing source files, reload the extension and reopen its popup or results page.
 
-3. **Clean Invalid Links**
-   - On the results page, invalid links will be automatically selected
-   - You can uncheck the links you don't want to clean
-   - Click the "Clean Selected Links" button
-   - Confirm the operation in the confirmation dialog box
-   - The system will first back up the current bookmarks to the desktop, then clean the selected invalid links
+## Use
 
-## File Description
+1. Click the extension icon, then **Scan Bookmarks**. You can close and reopen the popup while scanning.
+2. Open the results and review each folder. Click a bookmark row to verify the original link.
+3. Select invalid candidates individually or use **Select All Invalid Links**. Entering through the popup's cleanup button preselects confirmed invalid candidates.
+4. Confirm cleanup. The extension exports all current bookmarks, waits for the backup download to finish, then deletes the selected bookmarks.
 
-- `manifest.json`: Extension configuration file, defining the basic information and permissions of the extension
-- `background.js`: Background script, handling data scanning and cleaning logic
-- `popup.html/popup.js`: Extension popup window interface and interaction logic
-- `results.html/results.js`: Scan results display page and interaction logic
-- `icons/`: Extension icon folder (need to add actual icon files)
+The results page also offers an independent full backup.
 
-## Notes
+## Detection rules
 
-1. The first scan may take some time, depending on the number of URLs in the bookmarks
-2. Please do not close the extension popup window during scanning
-3. The cleaning operation will automatically create a backup file, saved on the desktop
-4. Some websites may not be detected accurately due to security policy restrictions
-5. It is recommended to scan and clean bookmarks regularly to maintain the validity of bookmarks
+| State | Rule | Eligible for cleanup |
+| --- | --- | --- |
+| Valid | HTTP(S) response is 2xx | No |
+| Invalid | HTTP(S) response is 404 or 410 | After selection and confirmation |
+| Unknown | Network failure, timeout, 401/403, 429, 5xx, other unexpected or unreadable responses | No |
+| Skipped | Non-HTTP(S) protocols such as `chrome:`, `edge:`, `file:`, `javascript:` or `mailto:` | No |
 
-## Bookmark Recovery Method
+Checks use `HEAD`, falling back to `GET` on 405/501 and cancelling the body after receiving response headers. Each request has a 10-second timeout. Bookmarks are checked sequentially with about 300 ms between entries.
 
-### Bookmark Recovery Method
+Login requirements, regional restrictions, anti-bot policies and temporary failures can affect results. An error page returning 200 can still appear valid. Verify candidates before deletion. Results from older versions require a new scan before cleanup.
 
-The extension now backs up bookmarks in HTML format, which can be directly imported by Chrome and Edge browsers.
+## Backup and restore
 
-#### Chrome Browser Bookmark Recovery
-1. Open Chrome browser, click the three dots menu in the top right corner → Bookmarks → Bookmark Manager
-2. On the Bookmark Manager page, click the three dots menu in the top right corner → Import bookmarks and settings
-3. In the pop-up import window, select the "Import from HTML file" option
-4. Click the "Choose File" button, find and select the previously backed up HTML file
-5. Click the "Import" button to complete the recovery
+Backups use browser-importable Netscape Bookmark HTML, preserving folder hierarchy, titles and URLs. Files go to the browser's configured **download directory**, with a UTC timestamp in names such as `bookmarks_backup_2026-10-29T12-34-56-789Z.html`.
 
-#### Edge Browser Bookmark Recovery
-1. Open favorites in Edge: press `Ctrl+Shift+O` or click the three dots menu in the top right corner → Favorites → Manage favorites
-2. Click the "Import favorites" button in the top right corner of the favorites interface
-3. In the pop-up import window, select the "Import from file" option
-4. Click the "Choose file" button, find and select the previously backed up HTML file
-5. Click the "Import" button to complete the recovery
+Failed, cancelled or unavailable backups stop cleanup. Bookmark URLs are checked again before deletion to detect edits made during backup.
 
-### Backup File Location
-- By default, backup files will be downloaded to your "Downloads" folder
-- File naming format: `bookmarks_backup_date.html` (example: `bookmarks_backup_2023-06-15.html`)
-- It is recommended to additionally save important backup files in a safe location to prevent accidental loss
+To restore, open your browser's bookmark manager, choose its HTML bookmark import function and select the backup. Imports usually add to existing bookmarks and can create duplicates.
 
-## Technical Implementation
+Deletion is not transactional: an edit or removal error can leave a cleanup partially complete. Check the backup and scan again after an error. Interrupted deletion tasks are not replayed after a worker restart. Interrupted scans restart from the beginning.
 
-- Using Chrome Bookmarks API to get bookmark data
-- Using Fetch API to detect URL accessibility
-- Using Chrome Downloads API to implement backup file download
-- Using Chrome Storage API to store scan results
-- Responsive UI design, supporting different screen sizes
+## Privacy and permissions
 
-## Development Environment
+There are no accounts, telemetry or developer-operated backend. Results and task state stay in extension-local browser storage. Scanning directly contacts bookmarked websites, including intranet sites. Those sites and network services can observe the requests. Requests omit browser login cookies, so authenticated pages may remain unknown.
 
-- Chrome browser (Manifest V3)
-- No additional dependencies or build tools required
+| Permission | Purpose |
+| --- | --- |
+| `bookmarks` | Read bookmarks and remove links confirmed by the user |
+| `storage` | Store results, progress and pending backup tasks |
+| `downloads` | Export backups and monitor completion |
+| HTTP/HTTPS host access | Check links across bookmarked websites |
 
-## Multilingual Support
+Backups contain the full bookmark collection. Store them securely and redact private URLs, credentials and tokens from bug reports.
 
-This extension supports the following languages:
+## Development and contributions
 
-- Chinese (Simplified)
-- English
-- Japanese
-- Korean
-- French
-- Spanish
+With Node.js 22+, run the dependency-free checks directly:
 
-The extension will automatically switch the display language according to the browser's language settings.
+```bash
+npm test
+npm run check
+```
 
-## Version History
-- v1.0: Initial version, including bookmark scanning, invalid link detection, HTML format backup and cleaning functions, supporting direct import and recovery in Chrome and Edge browsers, supporting multilingual internationalization (Chinese, English, Japanese, Korean, French and Spanish)
+Tests use Node's built-in test runner, a local HTTP server and mocked Chrome APIs. They cover classification, cancellation, download completion and failure, worker restart, HTML escaping and page state. Also verify changes in a separate browser profile: scan, reopen the popup, cancel a backup, complete cleanup and import the exported HTML with disposable bookmarks.
+
+Report reproducible bugs through [Issues](https://github.com/leiseek/clean-bookmarks/issues), including browser/version, extension version or commit, steps, expected behavior and actual results. Discuss substantial changes first. Pull requests should explain behavior and validation; changes to detection or deletion need regression tests, and new strings should appear in all six locale catalogs.
+
+## License
+
+[Mulan Permissive Software License, Version 2 (MulanPSL-2.0)](LICENSE).

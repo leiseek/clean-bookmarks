@@ -1,118 +1,40 @@
-# Nettoyeur de favoris - Extension Chrome
-Microsoft Edge Add-ons Store : [https://microsoftedge.microsoft.com/addons/detail/bfplmmnmgnfelmjdabmgjpfafnocnhna](https://microsoftedge.microsoft.com/addons/detail/bfplmmnmgnfelmjdabmgjpfafnocnhna)
+# Nettoyeur de favoris
 
-## Language Selection / Sélection de la langue
-- [中文(简体)](README.md)
-- [English](README-en.md)
-- [日本語](README-ja.md)
-- [한국어](README-ko.md)
-- [Français](#nettoyeur-de-favoris---extension-chrome)
-- [Español](README-es.md)
+Vérifiez les liens de vos favoris dans Chrome et Microsoft Edge. Les favoris sélectionnés et confirmés ne sont supprimés qu’après le téléchargement complet d’une sauvegarde HTML.
 
-Une extension Chrome pratique pour vérifier et nettoyer les URL inaccessibles dans les favoris.
+[简体中文](README.md) · [English](README-en.md) · [日本語](README-ja.md) · [한국어](README-ko.md) · **Français** · [Español](README-es.md)
 
-## Fonctionnalités
+## Installation
 
-- 🔍 **Scan des favoris**: Détecte automatiquement si toutes les URL des favoris sont accessibles
-- 📊 **Affichage des résultats**: Affiche clairement les résultats du scan, les liens invalides sont marqués avec un style visible
-- ☑️ **Sélection intelligente**: Sélectionne automatiquement les liens invalides, prend en charge la sélection multiple et simple
-- 💾 **Sauvegarde des données**: Sauvegarde automatiquement les données actuelles des favoris sur le bureau avant le nettoyage
-- 🗑️ **Nettoyage sûr**: Nécessite une confirmation secondaire de l'utilisateur avant le nettoyage pour éviter les erreurs
-- 🌐 **Support multilingue**: Support du chinois, de l'anglais, du japonais, du coréen, du français et de l'espagnol
+Installez l’extension depuis [Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/bfplmmnmgnfelmjdabmgjpfafnocnhna), ou chargez le code source. La version du magasin peut différer de la branche principale.
 
-## Méthode d'installation
+Le chargement local nécessite Chrome 102+ ou une version récente d’Edge compatible avec les mêmes API Manifest V3. Téléchargez le dépôt, ouvrez `chrome://extensions/` ou `edge://extensions/`, activez le mode développeur, puis chargez l’extension non empaquetée en sélectionnant le dossier contenant `manifest.json`. Aucune compilation n’est nécessaire.
 
-1. Téléchargez ou clonez ce projet sur votre ordinateur
-2. Ouvrez le navigateur Chrome, accédez à la page de gestion des extensions (`chrome://extensions/`)
-3. Activez le "Mode développeur" en haut à droite
-4. Cliquez sur "Charger l'extension non empaquetée"
-5. Sélectionnez le dossier de ce projet
-6. Installation terminée, vous pouvez voir l'icône de l'extension dans la barre d'outils du navigateur
+## Utilisation et résultats
 
-## Mode d'emploi
+1. Lancez l’analyse depuis l’icône de l’extension. Vous pouvez fermer puis rouvrir la fenêtre pendant l’analyse.
+2. Consultez les résultats par dossier. Cliquez sur une ligne pour vérifier le lien d’origine.
+3. Sélectionnez les candidats invalides et confirmez le nettoyage. Tous les favoris sont sauvegardés avant la suppression.
 
-1. **Scanner les favoris**
-   - Cliquez sur l'icône de l'extension, cliquez sur le bouton "Scanner les favoris" dans la fenêtre contextuelle
-   - Attendez la fin du scan, il affichera la progression du scan et le nombre de problèmes détectés
+| État | Règle | Suppression possible |
+| --- | --- | --- |
+| Valide | Réponse HTTP(S) 2xx | Non |
+| Invalide | Réponse HTTP(S) 404/410 | Après sélection et confirmation |
+| Indéterminé | Erreur réseau, délai dépassé, 401/403, 429, 5xx, etc. | Non |
+| Ignoré | Protocoles `chrome:`, `edge:`, `file:`, `javascript:`, etc. | Non |
 
-2. **Voir les résultats du scan**
-   - Une fois le scan terminé, cliquez sur le bouton "Voir les résultats du scan"
-   - Vous pouvez voir l'état de tous les favoris dans la page de résultats
-   - Les liens invalides seront mis en évidence avec une bordure et un arrière-plan rouges
+Une connexion requise, une restriction géographique ou une panne temporaire peuvent affecter les résultats. Vérifiez les liens avant leur suppression. Les anciens résultats nécessitent une nouvelle analyse. Une analyse interrompue peut être relancée depuis le début.
 
-3. **Nettoyer les liens invalides**
-   - Dans la page de résultats, les liens invalides seront automatiquement sélectionnés
-   - Vous pouvez décocher les liens que vous ne souhaitez pas nettoyer
-   - Cliquez sur le bouton "Nettoyer les liens sélectionnés"
-   - Confirmez l'opération dans la boîte de dialogue de confirmation
-   - Le système sauvegardera d'abord les favoris actuels sur le bureau, puis nettoiera les liens invalides sélectionnés
+## Sauvegarde et restauration
 
-## Description des fichiers
+Les sauvegardes HTML importables sont enregistrées dans le **dossier de téléchargement configuré dans le navigateur**. Un téléchargement annulé ou échoué bloque la suppression. La page des résultats permet aussi une sauvegarde seule.
 
-- `manifest.json`: Fichier de configuration de l'extension, définissant les informations de base et les autorisations de l'extension
-- `background.js`: Script en arrière-plan, traitant la logique de scan et de nettoyage des données
-- `popup.html/popup.js`: Interface de la fenêtre contextuelle de l'extension et logique d'interaction
-- `results.html/results.js`: Page d'affichage des résultats du scan et logique d'interaction
-- `icons/`: Dossier des icônes de l'extension (il faut ajouter des fichiers d'icônes réels)
+Pour restaurer les favoris, utilisez l’importation HTML du gestionnaire de favoris du navigateur. L’importation ajoute généralement des éléments et peut créer des doublons. Une erreur pendant la suppression peut laisser un nettoyage partiellement effectué, sans annulation automatique : consultez la sauvegarde et relancez une analyse.
 
-## Remarques
+## Confidentialité et contribution
 
-1. Le premier scan peut prendre un certain temps, en fonction du nombre d'URL dans les favoris
-2. Veuillez ne pas fermer la fenêtre contextuelle de l'extension pendant le scan
-3. L'opération de nettoyage créera automatiquement un fichier de sauvegarde, enregistré sur le bureau
-4. Certains sites Web peuvent ne pas être détectés avec précision en raison de restrictions de politique de sécurité
-5. Il est recommandé de scanner et de nettoyer régulièrement les favoris pour maintenir la validité des marque-pages
+Aucun compte, télémétrie ou serveur exploité par le développeur. Les résultats et tâches restent dans le stockage local de l’extension. L’analyse contacte directement les sites des favoris, sans cookies de connexion. Protégez vos sauvegardes et retirez les URL privées et jetons des rapports de problème.
 
-## Méthode de récupération des favoris
+Avec Node.js 22+, exécutez `npm test` et `npm run check`, sans dépendances externes. Vérifiez la suppression et la restauration dans un profil de navigateur séparé. Les [rapports de problème](https://github.com/leiseek/clean-bookmarks/issues), traductions et contributions sont les bienvenus.
 
-### Méthode de récupération des favoris
-
-L'extension sauvegarde maintenant les favoris au format HTML, qui peut être directement importé par les navigateurs Chrome et Edge.
-
-#### Récupération des favoris sur le navigateur Chrome
-1. Ouvrez le navigateur Chrome, cliquez sur le menu à trois points en haut à droite → Favoris → Gestionnaire de favoris
-2. Sur la page du gestionnaire de favoris, cliquez sur le menu à trois points en haut à droite → Importer des favoris et des paramètres
-3. Dans la fenêtre d'importation qui s'ouvre, sélectionnez l'option "Importer à partir d'un fichier HTML"
-4. Cliquez sur le bouton "Choisir un fichier", recherchez et sélectionnez le fichier HTML sauvegardé précédemment
-5. Cliquez sur le bouton "Importer" pour terminer la récupération
-
-#### Récupération des favoris sur le navigateur Edge
-1. Ouvrez les favoris dans Edge : appuyez sur `Ctrl+Shift+O` ou cliquez sur le menu à trois points en haut à droite → Favoris → Gérer les favoris
-2. Cliquez sur le bouton "Importer des favoris" en haut à droite de l'interface des favoris
-3. Dans la fenêtre d'importation qui s'ouvre, sélectionnez l'option "Importer à partir d'un fichier"
-4. Cliquez sur le bouton "Choisir un fichier", recherchez et sélectionnez le fichier HTML sauvegardé précédemment
-5. Cliquez sur le bouton "Importer" pour terminer la récupération
-
-### Emplacement du fichier de sauvegarde
-- Par défaut, les fichiers de sauvegarde seront téléchargés dans votre dossier "Téléchargements"
-- Format du nom de fichier : `bookmarks_backup_date.html` (exemple : `bookmarks_backup_2023-06-15.html`)
-- Il est recommandé de sauvegarder en plus les fichiers de sauvegarde importants dans un endroit sûr pour éviter une perte accidentelle
-
-## Implémentation technique
-
-- Utilisation de l'API Chrome Bookmarks pour récupérer les données des favoris
-- Utilisation de l'API Fetch pour détecter l'accessibilité des URL
-- Utilisation de l'API Chrome Downloads pour implémenter le téléchargement de fichiers de sauvegarde
-- Utilisation de l'API Chrome Storage pour stocker les résultats du scan
-- Conception d'interface utilisateur responsive, prenant en charge différentes tailles d'écran
-
-## Environnement de développement
-
-- Navigateur Chrome (Manifest V3)
-- Aucune dépendance supplémentaire ou outil de build requis
-
-## Support multilingue
-
-Cette extension prend en charge les langues suivantes :
-
-- Chinois (simplifié)
-- Anglais
-- Japonais
-- Coréen
-- Français
-- Espagnol
-
-L'extension passera automatiquement à la langue d'affichage selon les paramètres linguistiques de votre navigateur.
-
-## Historique des versions
-- v1.0: Version initiale, comprenant le scan de favoris, la détection de liens invalides, la sauvegarde et le nettoyage au format HTML, prenant en charge l'importation et la récupération directe dans les navigateurs Chrome et Edge, prenant en charge l'internationalisation multilingue (chinois, anglais, japonais, coréen, français et espagnol)
+Consultez le [README anglais](README-en.md) pour plus de détails. Licence : [MulanPSL-2.0](LICENSE).

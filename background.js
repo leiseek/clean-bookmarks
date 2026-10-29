@@ -1,432 +1,303 @@
-// 监听来自popup的消息
-chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
-  if (message.type === 'startScan') {
-    // 直接调用扫描函数
-    startBookmarkScan();
-    sendResponse({ started: true });
-    return true;
-  } else if (message.type === 'getResults') {
-    // 从存储中获取结果
-    chrome.storage.local.get(['scanResults'], function(result) {
-      sendResponse({ results: result.scanResults || [] });
-    });
-    return true;
-  } else if (message.type === 'backupAndClean') {
-    backupAndCleanBooks(message.selectedIds);
-    sendResponse({ started: true });
-    return true;
-  } else if (message.type === 'backupBookmarks') {
-    backupBookmarks();
-    sendResponse({ started: true });
-    return true;
+const REQUEST_TIMEOUT_MS = 10000;
+let scanTask = null;
+let backupJob = null;
+let backupQueue = Promise.resolve();
+
+const messageText = (key, values = []) => chrome.i18n.getMessage(key, values.map(String));
+
+async function notify(message) {
+  try {
+    await chrome.runtime.sendMessage(message);
+  } catch {
+    // Extension pages may be closed; durable state remains in storage.
   }
-  return false;
+}
+
+// Register download listeners synchronously so downloads can wake this worker.
+chrome.downloads.onChanged.addListener(delta => {
+  if (delta.state || delta.error || delta.exists) queueBackupCheck(delta.id);
+});
+chrome.downloads.onErased.addListener(id => queueBackupCheck(id));
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  const handlers = {
+    startScan: startBookmarkScan,
+    getScanState: getScanState,
+    getResults: async () => ({ results: (await getScanState()).scanResults || [] }),
+    backupBookmarks: backupBookmarks,
+    backupAndClean: () => backupAndCleanBooks(message.selectedIds)
+  };
+  if (!Object.hasOwn(handlers, message.type)) return false;
+  Promise.resolve().then(handlers[message.type]).then(sendResponse, error => {
+    sendResponse({ started: false, error: error.message });
+  });
+  return true;
 });
 
-// 使用storage来维护状态，而不是全局变量
-// 这样service worker被重新激活时也能恢复状态
+async function initializeWorker() {
+  const state = await chrome.storage.local.get(['isScanning', 'backupJob']);
+  if (state.isScanning) {
+    await chrome.storage.local.set({
+      isScanning: false, scanStatus: 'interrupted', scanResults: [],
+      scanError: messageText('scanInterrupted')
+    });
+  }
+  backupJob = state.backupJob || null;
+  if (backupJob && backupJob.phase !== 'downloading') {
+    // Never repeat a partially completed deletion after a worker restart.
+    if (backupJob.kind === 'clean') {
+      await chrome.storage.local.set({ scanResults: [], scanStatus: 'ready', invalidLinksCount: 0 });
+    }
+    await finishBackupJob({
+      type: backupJob.kind === 'clean' ? 'cleanError' : 'backupComplete',
+      status: 'error', error: messageText('operationInterrupted')
+    });
+  }
+}
 
-// 开始扫描收藏夹
+const workerReady = initializeWorker();
+workerReady.then(() => {
+  if (backupJob) queueBackupCheck(backupJob.downloadId);
+}).catch(error => console.error('Unable to restore extension state:', error));
+
+async function getScanState() {
+  await workerReady;
+  const state = await chrome.storage.local.get([
+    'scanStatus', 'scanResults', 'scanProgress', 'scanCurrent', 'scanTotal',
+    'currentBookmark', 'invalidLinksCount', 'scanError', 'backupJob', 'lastOperation'
+  ]);
+  return { ...state, isScanning: Boolean(scanTask) && state.scanStatus === 'scanning' };
+}
+
 async function startBookmarkScan() {
-  // 首先检查是否已经在扫描中
-  const storageResult = await new Promise(resolve => {
-    chrome.storage.local.get(['isScanning'], resolve);
-  });
-  
-  if (storageResult.isScanning) return;
-  
-  // 初始化状态
-  const scanData = {
-    isScanning: true,
-    scanResults: [],
-    scanProgress: 0,
-    invalidLinksCount: 0
-  };
-  
+  await workerReady;
+  if (scanTask) return { started: false, isScanning: true };
+  if (backupJob) throw new Error(messageText('operationBusy'));
+  scanTask = runBookmarkScan().finally(() => { scanTask = null; });
+  scanTask.catch(error => console.error('Unable to save scan state:', error));
+  return { started: true };
+}
+
+async function runBookmarkScan() {
   try {
-    // 获取所有书签
-    const bookmarkTree = await chrome.bookmarks.getTree();
-    const allBookmarks = flattenBookmarkTree(bookmarkTree);
-    
-    // 过滤出有URL的书签
-    const urlBookmarks = allBookmarks.filter(bookmark => bookmark.url);
-    scanData.scanTotal = urlBookmarks.length;
-    
-    // 保存扫描状态到本地存储
-    await new Promise(resolve => {
-      chrome.storage.local.set({
-        isScanning: true,
-        scanProgress: 0,
-        scanTotal: scanData.scanTotal,
-        scanStatus: 'scanning',
-        scanResults: [],
-        invalidLinksCount: 0
-      }, resolve);
+    await chrome.storage.local.set({
+      isScanning: true, scanStatus: 'scanning', scanError: '', scanResults: [],
+      scanProgress: 0, scanCurrent: 0, scanTotal: 0, currentBookmark: null, invalidLinksCount: 0
     });
-    
-    // 发送初始进度
-    sendProgressUpdate(0, chrome.i18n.getMessage('preparingScan', [scanData.scanTotal]));
-    
-    // 逐个检查URL
-    for (let i = 0; i < urlBookmarks.length; i++) {
-      const bookmark = urlBookmarks[i];
-      const progress = Math.round(((i + 1) / scanData.scanTotal) * 100);
-      
-      // 更新进度数据
-      scanData.scanProgress = progress;
-      
-      // 更新当前书签和进度到本地存储
-      await new Promise(resolve => {
-        chrome.storage.local.set({
-          currentBookmark: bookmark,
-          scanProgress: progress,
-          invalidLinksCount: scanData.invalidLinksCount
-        }, resolve);
+    const bookmarks = flattenBookmarkTree(await chrome.bookmarks.getTree());
+    await chrome.storage.local.set({ scanTotal: bookmarks.length });
+    const results = [];
+    let invalidCount = 0;
+    for (const [index, bookmark] of bookmarks.entries()) {
+      await chrome.storage.local.set({ currentBookmark: bookmark });
+      const validity = await checkUrlValidity(bookmark.url);
+      results.push({
+        id: bookmark.id, title: bookmark.title, url: bookmark.url,
+        folderPath: bookmark.folderPath, ...validity,
+        isValid: validity.status === 'valid' ? true : validity.status === 'invalid' ? false : null
       });
-      
-      // 发送详细进度信息
-      sendProgressUpdate(progress, 
-        chrome.i18n.getMessage('scanningProgress', [i + 1, scanData.scanTotal, bookmark.title, bookmark.url, scanData.invalidLinksCount]),
-        {
-          currentIndex: i + 1,
-          total: scanData.scanTotal,
-          currentTitle: bookmark.title,
-          currentUrl: bookmark.url,
-          invalidCount: scanData.invalidLinksCount
-        }
-      );
-      
-      try {
-        // 检查URL是否可访问
-        const isValid = await checkUrlValidity(bookmark.url);
-        
-        const resultItem = {
-          id: bookmark.id,
-          title: bookmark.title,
-          url: bookmark.url,
-          folderPath: bookmark.folderPath,
-          isValid: isValid,
-          error: isValid ? null : '无法访问'
-        };
-        
-        scanData.scanResults.push(resultItem);
-        
-        if (!isValid) {
-          scanData.invalidLinksCount++;
-        }
-      } catch (error) {
-        scanData.scanResults.push({
-          id: bookmark.id,
-          title: bookmark.title,
-          url: bookmark.url,
-          folderPath: bookmark.folderPath,
-          isValid: false,
-          error: error.message
-        });
-        scanData.invalidLinksCount++;
-      }
-      
-      // 避免请求过于频繁，添加小延迟
-      await new Promise(resolve => setTimeout(resolve, 300));
+      if (validity.status === 'invalid') invalidCount++;
+      const progress = Math.round((index + 1) / bookmarks.length * 100);
+      await chrome.storage.local.set({
+        scanProgress: progress, scanCurrent: index + 1, invalidLinksCount: invalidCount
+      });
+      await notify({
+        type: 'scanProgress', progress,
+        details: { currentIndex: index + 1, total: bookmarks.length,
+          currentTitle: bookmark.title, currentUrl: bookmark.url, invalidCount }
+      });
+      if (index + 1 < bookmarks.length) await new Promise(resolve => setTimeout(resolve, 300));
     }
-    
-    // 保存扫描结果
-    await new Promise(resolve => {
-      chrome.storage.local.set({
-        scanResults: scanData.scanResults,
-        isScanning: false,
-        scanStatus: 'complete',
-        invalidLinksCount: scanData.invalidLinksCount
-      }, resolve);
+    await chrome.storage.local.set({
+      scanResults: results, isScanning: false, scanStatus: 'complete', scanProgress: 100,
+      scanCurrent: bookmarks.length, invalidLinksCount: invalidCount
     });
-    
-    sendProgressUpdate(100, 
-      chrome.i18n.getMessage('scanCompleteWithResults', [scanData.invalidLinksCount]),
-      {
-        currentIndex: scanData.scanTotal,
-        total: scanData.scanTotal,
-        invalidCount: scanData.invalidLinksCount
-      }
-    );
-    
-    // 通知popup扫描完成
-    try {
-      await chrome.runtime.sendMessage({
-        type: 'scanComplete',
-        results: scanData.scanResults
-      });
-    } catch (err) {
-      // popup可能已关闭，忽略错误
-    }
-    
+    await notify({ type: 'scanComplete', results });
   } catch (error) {
-    console.error('扫描过程中出错:', error);
-    // 保存错误状态
-    await new Promise(resolve => {
-      chrome.storage.local.set({
-        isScanning: false,
-        scanStatus: 'ready',
-        scanError: error.message
-      }, resolve);
+    await chrome.storage.local.set({ isScanning: false, scanStatus: 'error', scanError: error.message });
+    await notify({ type: 'scanError', error: error.message });
+  }
+}
+
+function flattenBookmarkTree(nodes, path = []) {
+  return nodes.flatMap(node => {
+    if (node.children) return flattenBookmarkTree(node.children, node.title ? [...path, node.title] : path);
+    return node.url ? [{ ...node, folderPath: path.join(' > ') || messageText('otherBookmarks') }] : [];
+  });
+}
+
+async function requestStatus(url, method) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+  try {
+    const response = await fetch(url, {
+      method, signal: controller.signal, credentials: 'omit', cache: 'no-store', redirect: 'follow'
     });
-    
-    sendProgressUpdate(0, chrome.i18n.getMessage('scanFailed', [error.message]));
+    // GET is used only as a HEAD fallback; do not download the whole page body.
+    if (response.body) response.body.cancel().catch(() => {});
+    return response;
+  } finally {
+    clearTimeout(timeout);
+    controller.abort();
   }
 }
 
-// 扁平化书签树结构
-function flattenBookmarkTree(bookmarkNodes) {
-  let result = [];
-  
-  function traverse(nodes, path = []) {
-    for (const node of nodes) {
-      if (node.children) {
-        // 如果是文件夹，继续递归，并将当前文件夹名称添加到路径中
-        traverse(node.children, [...path, node.title]);
-      } else if (node.url) {
-        // 如果是书签，添加到结果中，并包含路径信息
-        result.push({
-          ...node,
-          folderPath: path.length > 0 ? path.join(' > ') : '其他书签'
-        });
-      }
-    }
-  }
-  
-  traverse(bookmarkNodes);
-  return result;
-}
-
-// 检查URL有效性
 async function checkUrlValidity(url) {
-  return new Promise((resolve) => {
-    // 创建一个超时定时器
-    const timeoutId = setTimeout(() => {
-      resolve(false);
-    }, 30000); // 30秒超时
-    
-    // 使用fetch尝试访问URL
-    fetch(url, { 
-      method: 'HEAD',
-      mode: 'no-cors'
-    })
-    .then(() => {
-      clearTimeout(timeoutId);
-      // 对于no-cors模式，我们只能判断请求是否发送成功
-      // 不能准确判断HTTP状态码，但这对于大多数情况已经足够
-      resolve(true);
-    })
-    .catch(() => {
-      clearTimeout(timeoutId);
-      resolve(false);
-    });
+  let parsed;
+  try {
+    parsed = new URL(url);
+  } catch {
+    return { status: 'unknown', reason: 'invalidUrl' };
+  }
+  if (!['http:', 'https:'].includes(parsed.protocol)) {
+    return { status: 'skipped', reason: 'unsupportedProtocol' };
+  }
+  try {
+    let response = await requestStatus(url, 'HEAD');
+    if ([405, 501].includes(response.status)) response = await requestStatus(url, 'GET');
+    if (response.type === 'opaque' || response.status === 0) {
+      return { status: 'unknown', reason: 'unreadableResponse' };
+    }
+    if (response.ok) return { status: 'valid', httpStatus: response.status };
+    if ([404, 410].includes(response.status)) return { status: 'invalid', httpStatus: response.status };
+    return { status: 'unknown', httpStatus: response.status, reason: 'httpError' };
+  } catch (error) {
+    return { status: 'unknown', reason: error.name === 'AbortError' ? 'timeout' : 'networkError' };
+  }
+}
+
+function escapeHtml(value) {
+  return String(value).replace(/[&<>"']/g, char => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  })[char]);
+}
+
+function bookmarksToHtml(bookmarkTree) {
+  const title = escapeHtml(messageText('bookmarksHtmlTitle'));
+  let html = `<!DOCTYPE NETSCAPE-Bookmark-file-1>\n<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">\n<TITLE>${title}</TITLE>\n<H1>${title}</H1>\n<DL><p>\n`;
+  function traverse(nodes, level = 1) {
+    for (const node of nodes) {
+      const indent = '  '.repeat(level);
+      if (node.children) {
+        if (node.id === '0') { traverse(node.children, level); continue; }
+        html += `${indent}<DT><H3>${escapeHtml(node.title || messageText('untitledFolder'))}</H3>\n${indent}<DL><p>\n`;
+        traverse(node.children, level + 1);
+        html += `${indent}</DL><p>\n`;
+      } else if (node.url) {
+        html += `${indent}<DT><A HREF="${escapeHtml(node.url)}">${escapeHtml(node.title || messageText('untitledBookmark'))}</A>\n`;
+      }
+    }
+  }
+  traverse(bookmarkTree);
+  return html + '</DL><p>\n';
+}
+
+function isConfirmedInvalid(bookmark) {
+  return bookmark.status === 'invalid' && [404, 410].includes(bookmark.httpStatus) && /^https?:\/\//i.test(bookmark.url);
+}
+
+async function validateSelection(selectedIds, tree, originalSelection) {
+  if (!Array.isArray(selectedIds) || !selectedIds.length || selectedIds.some(id => typeof id !== 'string')) {
+    throw new Error(messageText('selectBookmarksToClean'));
+  }
+  const { scanResults = [] } = await chrome.storage.local.get('scanResults');
+  const results = new Map(scanResults.filter(isConfirmedInvalid).map(bookmark => [bookmark.id, bookmark]));
+  const current = new Map(flattenBookmarkTree(tree).map(bookmark => [bookmark.id, bookmark]));
+  return [...new Set(selectedIds)].map(id => {
+    const result = results.get(id);
+    const bookmark = current.get(id);
+    if (!result || !bookmark || result.url !== bookmark.url ||
+        (originalSelection && !originalSelection.some(item => item.id === id && item.url === bookmark.url))) {
+      throw new Error(messageText('staleSelection'));
+    }
+    return { id, url: bookmark.url };
   });
 }
 
-// 发送进度更新到popup
-async function sendProgressUpdate(progress, status, details = {}) {
+async function backupBookmarks() { return startBackup(); }
+async function backupAndCleanBooks(selectedIds) { return startBackup(selectedIds); }
+
+async function startBackup(selectedIds) {
+  await workerReady;
+  if (backupJob || scanTask) throw new Error(messageText('operationBusy'));
+  backupJob = { kind: selectedIds === undefined ? 'backup' : 'clean', phase: 'starting' };
   try {
-    // 尝试发送消息，但不阻塞执行
-    await chrome.runtime.sendMessage({
-      type: 'scanProgress',
-      progress: progress,
-      status: status,
-      details: details
+    await chrome.storage.local.set({ backupJob, lastOperation: null });
+    const tree = await chrome.bookmarks.getTree();
+    if (backupJob.kind === 'clean') backupJob.selectedBookmarks = await validateSelection(selectedIds, tree);
+    const html = bookmarksToHtml(tree);
+    const filename = `bookmarks_backup_${new Date().toISOString().replace(/[:.]/g, '-')}.html`;
+    const downloadId = await chrome.downloads.download({
+      url: `data:text/html;base64,${btoa(unescape(encodeURIComponent(html)))}`,
+      filename, saveAs: false, conflictAction: 'uniquify'
     });
+    backupJob = { ...backupJob, filename, downloadId, phase: 'downloading' };
+    await chrome.storage.local.set({ backupJob });
+    // A small data URL may finish before its id is persisted.
+    queueBackupCheck(downloadId);
+    return { started: true };
   } catch (error) {
-    // 忽略错误，可能是popup已关闭或其他通信问题
-    console.log('发送进度更新失败（可能是popup已关闭）:', error.message);
+    await finishBackupJob({
+      type: backupJob.kind === 'clean' ? 'cleanError' : 'backupComplete', status: 'error', error: error.message
+    });
+    throw error;
   }
 }
 
-// 将书签树转换为HTML格式
-function bookmarksToHtml(bookmarkTree) {
-  // 生成HTML头部
-  let html = `<!DOCTYPE NETSCAPE-Bookmark-file-1>
-<!-- This is an automatically generated file.
-     It will be read and overwritten.
-     DO NOT EDIT! -->
-<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
-<TITLE>书签备份</TITLE>
-<H1>书签备份</H1>
-<DL><p>
-`;
-
-  // 递归生成HTML内容
-  function traverseNodes(nodes, level = 0) {
-    for (const node of nodes) {
-      if (node.children) {
-        // 文件夹
-        const indent = '  '.repeat(level);
-        html += `${indent}<DT><H3>${node.title || '未命名文件夹'}</H3>
-${indent}<DL><p>
-`;
-        traverseNodes(node.children, level + 1);
-        html += `${indent}</DL><p>
-`;
-      } else if (node.url) {
-        // 书签
-        const indent = '  '.repeat(level);
-        // 处理特殊字符
-        const title = node.title.replace(/[<>&]/g, char => {
-          return char === '<' ? '&lt;' : char === '>' ? '&gt;' : '&amp;';
-        });
-        html += `${indent}<DT><A HREF="${node.url}">${title || '未命名书签'}</A>
-`;
-      }
-    }
-  }
-
-  // 开始遍历书签树
-  traverseNodes(bookmarkTree);
-  
-  // 结束HTML文档
-  html += `</DL><p>
-`;
-  return html;
-}
-
-// 备份书签
-async function backupBookmarks() {
-  try {
-    // 获取所有书签数据用于备份
-    const bookmarkTree = await chrome.bookmarks.getTree();
-    
-    // 检查书签树是否为空
-    if (!bookmarkTree || bookmarkTree.length === 0) {
-      console.warn('没有找到书签数据');
-      // 发送备份完成但无内容的消息
-      chrome.runtime.sendMessage({
-        type: 'backupComplete',
-        status: 'empty',
-        message: '没有找到可备份的书签'
-      }).catch(() => {}); // 忽略发送失败的错误
-      return;
-    }
-    
-    // 将书签转换为HTML格式
-    const htmlContent = bookmarksToHtml(bookmarkTree);
-    
-    // 检查生成的HTML内容是否为空
-    if (!htmlContent || htmlContent.trim().length === 0) {
-      console.error('生成的书签HTML内容为空');
-      chrome.runtime.sendMessage({
-        type: 'backupComplete',
-        status: 'error',
-        message: '生成的书签内容为空'
-      }).catch(() => {}); // 忽略发送失败的错误
-      return;
-    }
-    
-    // 将HTML内容转换为base64编码
-    const base64 = btoa(unescape(encodeURIComponent(htmlContent)));
-    const dataUrl = `data:text/html;base64,${base64}`;
-    
-    // 下载备份文件到桌面
-    const filename = `bookmarks_backup_${new Date().toISOString().slice(0, 10)}.html`;
-    
-    // 使用Promise封装下载操作，以便更好地处理完成和错误情况
-    await new Promise((resolve, reject) => {
-      chrome.downloads.download({
-        url: dataUrl,
-        filename: filename,
-        saveAs: false
-      }, (downloadId) => {
-        if (chrome.runtime.lastError) {
-          reject(new Error(chrome.runtime.lastError.message));
-        } else {
-          resolve(downloadId);
-        }
+function queueBackupCheck(id) {
+  backupQueue = backupQueue.then(async () => {
+    await workerReady;
+    if (backupJob && backupJob.downloadId === id) await checkBackupDownload();
+  }).catch(async error => {
+    console.error('Backup operation failed:', error);
+    if (backupJob) {
+      await finishBackupJob({
+        type: backupJob.kind === 'clean' ? 'cleanError' : 'backupComplete', status: 'error', error: error.message
       });
-    });
-    
-    // 备份成功后发送通知
-    chrome.runtime.sendMessage({
-      type: 'backupComplete',
-      status: 'success',
-      message: `书签备份成功，文件名为: ${filename}`
-    }).catch(() => {}); // 忽略发送失败的错误
-    
-  } catch (error) {
-    console.error('备份过程中出错:', error);
-    // 发送错误通知
-    chrome.runtime.sendMessage({
-      type: 'backupComplete',
-      status: 'error',
-      message: '备份过程中出错: ' + error.message
-    }).catch(() => {}); // 忽略发送失败的错误
-  }
+    }
+  });
+  return backupQueue;
 }
 
-// 备份并清理书签
-async function backupAndCleanBooks(selectedIds) {
-  try {
-    // 1. 获取所有书签数据用于备份
-    const bookmarkTree = await chrome.bookmarks.getTree();
-    
-    // 2. 将书签转换为HTML格式
-    const htmlContent = bookmarksToHtml(bookmarkTree);
-    
-    // 3. 将HTML内容转换为base64编码
-    const base64 = btoa(unescape(encodeURIComponent(htmlContent)));
-    const dataUrl = `data:text/html;base64,${base64}`;
-    
-    // 4. 下载备份文件到桌面
-    const filename = `bookmarks_backup_${new Date().toISOString().slice(0, 10)}.html`;
-    chrome.downloads.download({
-      url: dataUrl,
-      filename: filename,
-      saveAs: false
-    }, function(downloadId) {
-      // 4. 备份完成后开始删除失效书签
-      if (chrome.runtime.lastError) {
-        console.error('下载备份文件失败:', chrome.runtime.lastError);
-        chrome.runtime.sendMessage({
-          type: 'cleanError',
-          error: '备份文件下载失败: ' + chrome.runtime.lastError.message
-        });
-        return;
-      }
-      
-      // 添加一个短暂延迟，确保文件已完全下载
-      setTimeout(() => {
-        removeInvalidBookmarks(selectedIds);
-      }, 1000);
-    });
-    
-  } catch (error) {
-    console.error('备份和清理过程中出错:', error);
-    chrome.runtime.sendMessage({
-      type: 'cleanError',
-      error: error.message
-    });
+async function checkBackupDownload() {
+  const job = backupJob;
+  const [download] = await chrome.downloads.search({ id: job.downloadId });
+  if (!download || download.state === 'interrupted' || download.exists === false) {
+    throw new Error(messageText('backupFailed') + (download?.error ? ` (${download.error})` : ''));
   }
-}
-
-// 删除失效书签
-async function removeInvalidBookmarks(bookmarkIds) {
+  if (download.state !== 'complete') return;
+  if (job.kind === 'backup') {
+    await finishBackupJob({ type: 'backupComplete', status: 'success', filename: job.filename });
+    return;
+  }
+  const selection = await validateSelection(
+    job.selectedBookmarks.map(bookmark => bookmark.id), await chrome.bookmarks.getTree(), job.selectedBookmarks
+  );
+  backupJob = { ...job, phase: 'removing' };
+  await chrome.storage.local.set({ backupJob });
+  let removedCount = 0;
   try {
-    let removedCount = 0;
-    
-    for (const id of bookmarkIds) {
-      await chrome.bookmarks.remove(id);
+    for (const bookmark of selection) {
+      const [current] = await chrome.bookmarks.get(bookmark.id);
+      if (current.url !== bookmark.url) throw new Error(messageText('staleSelection'));
+      await chrome.bookmarks.remove(bookmark.id);
       removedCount++;
     }
-    
-    // 清理本地存储的扫描结果
-    chrome.storage.local.remove('scanResults');
-    
-    // 通知清理完成
-    chrome.runtime.sendMessage({
-      type: 'cleanComplete',
-      removedCount: removedCount
+    const { scanResults = [] } = await chrome.storage.local.get('scanResults');
+    const removedIds = new Set(selection.map(bookmark => bookmark.id));
+    const remaining = scanResults.filter(bookmark => !removedIds.has(bookmark.id));
+    await chrome.storage.local.set({
+      scanResults: remaining, invalidLinksCount: remaining.filter(isConfirmedInvalid).length
     });
-    
+    await finishBackupJob({ type: 'cleanComplete', removedCount, filename: job.filename });
   } catch (error) {
-    console.error('删除书签过程中出错:', error);
-    chrome.runtime.sendMessage({
-      type: 'cleanError',
-      error: error.message
-    });
+    await chrome.storage.local.set({ scanResults: [], scanStatus: 'ready', invalidLinksCount: 0 });
+    await finishBackupJob({ type: 'cleanError', error: error.message, removedCount, filename: job.filename });
   }
+}
+
+async function finishBackupJob(message) {
+  await chrome.storage.local.set({ backupJob: null, lastOperation: message });
+  backupJob = null;
+  await notify(message);
 }

@@ -1,0 +1,12 @@
+{
+  "name": "clean-bookmarks",
+  "version": "1.1.0",
+  "private": true,
+  "description": "Bookmark cleaner browser extension",
+  "license": "MulanPSL-2.0",
+  "scripts": {
+    "test": "node --test",
+    "check": "node --check background.js && node --check popup.js && node --check results.js"
+  },
+  "engines": { "node": ">=22" }
+}

@@ -162,7 +162,7 @@
       </div>
       <div id="scanDetails" class="scan-details" style="display: none;">
         <div class="detail-item">
-          <span class="detail-label">进度：</span>
+          <span class="detail-label" id="scanProgressLabel"></span>
           <span id="scanProgress" class="detail-value"></span>
         </div>
         <div class="detail-item">
@@ -180,6 +180,7 @@
       </div>
     </div>
   
+    <p id="scanStatus" role="status" aria-live="polite"></p>
     <!-- 国际化文本设置已移至popup.js文件 -->
     <script src="popup.js"></script>
   </body>

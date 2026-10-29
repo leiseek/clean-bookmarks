@@ -138,7 +138,7 @@
     }
   },
   "confirmCleanActions1": {
-    "message": "Respaldar marcadores actuales en el escritorio",
+    "message": "Guardar una copia completa en la carpeta de descargas y esperar a que termine antes de borrar",
     "description": "Confirm cleanup action 1"
   },
   "confirmCleanActions2": {
@@ -172,7 +172,7 @@
     }
   },
   "backupSavedText": {
-    "message": "El archivo de respaldo se ha guardado en su escritorio",
+    "message": "La copia está guardada en la carpeta de descargas del navegador. Consulta la lista de descargas.",
     "description": "Backup saved text"
   },
   "closeButton": {
@@ -308,5 +308,85 @@
   "backupEmpty": {
     "message": "No se encontró contenido de marcadores para copiar seguridad",
     "description": "Mensaje de contenido de copia de seguridad vacío"
+  },
+  "statusUnknown": {
+    "description": "statusUnknown",
+    "message": "Sin confirmar"
+  },
+  "statusSkipped": {
+    "description": "statusSkipped",
+    "message": "Omitido"
+  },
+  "unknownBookmarks": {
+    "description": "unknownBookmarks",
+    "message": "Sin confirmar: $count$",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
+  "skippedBookmarks": {
+    "description": "skippedBookmarks",
+    "message": "Omitidos: $count$",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
+  "scanProgressLabel": {
+    "description": "scanProgressLabel",
+    "message": "Progreso: "
+  },
+  "scanInterrupted": {
+    "description": "scanInterrupted",
+    "message": "El análisis anterior se interrumpió. Inicia otro análisis."
+  },
+  "operationInterrupted": {
+    "description": "operationInterrupted",
+    "message": "La copia o limpieza anterior se interrumpió. Revisa las descargas y vuelve a analizar."
+  },
+  "operationBusy": {
+    "description": "operationBusy",
+    "message": "Hay un análisis, copia o limpieza en curso. Espera a que termine."
+  },
+  "staleSelection": {
+    "description": "staleSelection",
+    "message": "Los marcadores seleccionados cambiaron o no se confirmaron como inválidos. Vuelve a analizar."
+  },
+  "cleaningInProgress": {
+    "description": "cleaningInProgress",
+    "message": "Copia y limpieza en curso. Esperando a que termine la descarga…"
+  },
+  "reasonUnsupportedProtocol": {
+    "description": "reasonUnsupportedProtocol",
+    "message": "Este protocolo se excluye del análisis de red y de la limpieza."
+  },
+  "reasonInvalidUrl": {
+    "description": "reasonInvalidUrl",
+    "message": "Formato de URL no reconocido. Compruébalo manualmente."
+  },
+  "reasonNetworkError": {
+    "description": "reasonNetworkError",
+    "message": "La solicitud de red falló. Comprueba manualmente o inténtalo más tarde."
+  },
+  "reasonTimeout": {
+    "description": "reasonTimeout",
+    "message": "La solicitud agotó el tiempo de espera. Inténtalo más tarde."
+  },
+  "reasonHttpError": {
+    "description": "reasonHttpError",
+    "message": "Estado HTTP inesperado: puede requerir sesión, permisos o deberse a un fallo temporal."
+  },
+  "reasonUnreadableResponse": {
+    "description": "reasonUnreadableResponse",
+    "message": "No se pudo leer el estado de la respuesta. Compruébalo manualmente."
+  },
+  "reasonLegacyResult": {
+    "description": "reasonLegacyResult",
+    "message": "Resultados de una versión anterior. Vuelve a analizar antes de limpiar."
   }
 }

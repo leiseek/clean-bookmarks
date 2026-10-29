@@ -138,7 +138,7 @@
     }
   },
   "confirmCleanActions1": {
-    "message": "备份当前收藏夹到桌面",
+    "message": "先将完整备份保存到浏览器下载目录，确认下载完成后再删除",
     "description": "确认清理操作1"
   },
   "confirmCleanActions2": {
@@ -172,7 +172,7 @@
     }
   },
   "backupSavedText": {
-    "message": "备份文件已保存到您的桌面",
+    "message": "备份已保存到浏览器设置的下载目录，可从下载列表查找。",
     "description": "备份保存文本"
   },
   "closeButton": {
@@ -308,5 +308,85 @@
   "backupEmpty": {
     "message": "没有找到可备份的书签内容",
     "description": "备份内容为空消息"
+  },
+  "statusUnknown": {
+    "description": "statusUnknown",
+    "message": "无法确认"
+  },
+  "statusSkipped": {
+    "description": "statusSkipped",
+    "message": "已跳过"
+  },
+  "unknownBookmarks": {
+    "description": "unknownBookmarks",
+    "message": "无法确认：$count$",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
+  "skippedBookmarks": {
+    "description": "skippedBookmarks",
+    "message": "已跳过：$count$",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
+  "scanProgressLabel": {
+    "description": "scanProgressLabel",
+    "message": "进度："
+  },
+  "scanInterrupted": {
+    "description": "scanInterrupted",
+    "message": "上次扫描已中断，请重新扫描。"
+  },
+  "operationInterrupted": {
+    "description": "operationInterrupted",
+    "message": "上次备份或清理已中断。请检查下载文件并重新扫描后再清理。"
+  },
+  "operationBusy": {
+    "description": "operationBusy",
+    "message": "正在扫描、备份或清理，请等待当前操作完成。"
+  },
+  "staleSelection": {
+    "description": "staleSelection",
+    "message": "选中的书签已变更或未经确认失效，请重新扫描后再清理。"
+  },
+  "cleaningInProgress": {
+    "description": "cleaningInProgress",
+    "message": "正在备份并清理，请等待下载完成…"
+  },
+  "reasonUnsupportedProtocol": {
+    "description": "reasonUnsupportedProtocol",
+    "message": "此协议不参与网络检测，也不会被清理。"
+  },
+  "reasonInvalidUrl": {
+    "description": "reasonInvalidUrl",
+    "message": "网址格式无法识别，请手动检查。"
+  },
+  "reasonNetworkError": {
+    "description": "reasonNetworkError",
+    "message": "网络连接失败，请手动检查或稍后重试。"
+  },
+  "reasonTimeout": {
+    "description": "reasonTimeout",
+    "message": "请求超时，请稍后重试。"
+  },
+  "reasonHttpError": {
+    "description": "reasonHttpError",
+    "message": "网站返回异常状态；登录、权限或临时故障可能影响检测。"
+  },
+  "reasonUnreadableResponse": {
+    "description": "reasonUnreadableResponse",
+    "message": "无法读取响应状态，请手动检查。"
+  },
+  "reasonLegacyResult": {
+    "description": "reasonLegacyResult",
+    "message": "旧版扫描结果需重新扫描后才能清理。"
   }
 }

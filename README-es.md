@@ -1,118 +1,40 @@
-# Limpiador de Marcadores - Extensión Chrome
-Tienda de complementos de Microsoft Edge: [https://microsoftedge.microsoft.com/addons/detail/bfplmmnmgnfelmjdabmgjpfafnocnhna](https://microsoftedge.microsoft.com/addons/detail/bfplmmnmgnfelmjdabmgjpfafnocnhna)
+# Limpiador de marcadores
 
-## Language Selection / Selección de idioma
-- [中文(简体)](README.md)
-- [English](README-en.md)
-- [日本語](README-ja.md)
-- [한국어](README-ko.md)
-- [Français](README-fr.md)
-- [Español](#limpiador-de-marcadores---extensión-chrome)
+Comprueba enlaces de marcadores en Chrome y Microsoft Edge. Los enlaces seleccionados y confirmados se eliminan después de completar la descarga de una copia HTML de todos los marcadores.
 
-Una extensión útil para Chrome para verificar y limpiar URLs inaccesibles en los marcadores.
+[简体中文](README.md) · [English](README-en.md) · [日本語](README-ja.md) · [한국어](README-ko.md) · [Français](README-fr.md) · **Español**
 
-## Características
+## Instalación
 
-- 🔍 **Escaneo de Marcadores**: Detecta automáticamente si todas las URL de los marcadores son accesibles
-- 📊 **Visualización de Resultados**: Muestra claramente los resultados del escaneo, los enlaces inválidos se marcan con un estilo destacado
-- ☑️ **Selección Inteligente**: Selecciona automáticamente los enlaces inválidos, admite selección total y individual
-- 💾 **Copia de Seguridad de Datos**: Crea automáticamente una copia de seguridad de los datos actuales de marcadores en el escritorio antes de limpiar
-- 🗑️ **Limpieza Segura**: Requiere confirmación secundaria del usuario antes de limpiar para prevenir operaciones erróneas
-- 🌐 **Soporte Multilingüe**: Admite chino, inglés, japonés, coreano, francés y español
+Instala desde [Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/bfplmmnmgnfelmjdabmgjpfafnocnhna) o carga el código fuente. La versión de la tienda puede ser diferente de la rama principal.
 
-## Método de Instalación
+La instalación local requiere Chrome 102+ o un Edge reciente compatible con las mismas API de Manifest V3. Descarga el repositorio, abre `chrome://extensions/` o `edge://extensions/`, activa el modo de desarrollador y carga la extensión descomprimida seleccionando la carpeta que contiene `manifest.json`. No requiere compilación.
 
-1. Descargue o clone este proyecto en su computadora
-2. Abra el navegador Chrome, vaya a la página de administración de extensiones (`chrome://extensions/`)
-3. Active el "Modo de desarrollador" en la esquina superior derecha
-4. Haga clic en "Cargar extensión descomprimida"
-5. Seleccione la carpeta de este proyecto
-6. Instalación completada, puede ver el icono de la extensión en la barra de herramientas del navegador
+## Uso y clasificación
 
-## Instrucciones de Uso
+1. Inicia el análisis desde el icono de la extensión. Puedes cerrar la ventana emergente y volver a abrirla durante el análisis.
+2. Revisa los resultados por carpeta. Haz clic en una fila para comprobar el enlace original.
+3. Selecciona los candidatos inválidos y confirma la limpieza. Primero se guardará una copia completa de los marcadores.
 
-1. **Escanear Marcadores**
-   - Haga clic en el icono de la extensión, haga clic en el botón "Escanear Marcadores" en la ventana emergente
-   - Espere a que finalice el escaneo, mostrará el progreso del escaneo y el número de problemas encontrados
+| Estado | Regla | Se puede eliminar |
+| --- | --- | --- |
+| Válido | Respuesta HTTP(S) 2xx | No |
+| Inválido | Respuesta HTTP(S) 404/410 | Tras seleccionar y confirmar |
+| Sin confirmar | Error de red, tiempo agotado, 401/403, 429, 5xx, etc. | No |
+| Omitido | Protocolos `chrome:`, `edge:`, `file:`, `javascript:`, etc. | No |
 
-2. **Ver Resultados del Escaneo**
-   - Una vez finalizado el escaneo, haga clic en el botón "Ver Resultados del Escaneo"
-   - Puede ver el estado de todos los marcadores en la página de resultados
-   - Los enlaces inválidos se resaltarán con un borde y fondo rojos
+El inicio de sesión, las restricciones regionales y los fallos temporales pueden afectar los resultados. Comprueba los enlaces antes de eliminarlos. Los resultados antiguos requieren otro análisis. Los análisis interrumpidos pueden reiniciarse desde el principio.
 
-3. **Limpiar Enlaces Inválidos**
-   - En la página de resultados, los enlaces inválidos se seleccionarán automáticamente
-   - Puede desmarcar los enlaces que no desea limpiar
-   - Haga clic en el botón "Limpiar Enlaces Seleccionados"
-   - Confirme la operación en el cuadro de diálogo de confirmación
-   - El sistema primero hará una copia de seguridad de los marcadores actuales en el escritorio, luego limpiará los enlaces inválidos seleccionados
+## Copia y restauración
 
-## Descripción de Archivos
+Las copias HTML se guardan en la **carpeta de descargas configurada en el navegador**. Si la descarga falla o se cancela, no se eliminan marcadores. También puedes crear una copia independiente desde la página de resultados.
 
-- `manifest.json`: Archivo de configuración de la extensión, que define la información básica y los permisos de la extensión
-- `background.js`: Script en segundo plano, que maneja la lógica de escaneo y limpieza de datos
-- `popup.html/popup.js`: Interfaz de la ventana emergente de la extensión y lógica de interacción
-- `results.html/results.js`: Página de visualización de resultados del escaneo y lógica de interacción
-- `icons/`: Carpeta de iconos de la extensión (se deben agregar archivos de iconos reales)
+Para restaurar, utiliza la importación HTML del administrador de marcadores del navegador. La importación suele añadir elementos a los existentes y puede crear duplicados. Un error durante la eliminación puede dejar una limpieza parcial, sin revertir automáticamente lo ya eliminado. Revisa la copia y vuelve a analizar.
 
-## Notas Importantes
+## Privacidad y contribuciones
 
-1. El primer escaneo puede tomar mucho tiempo, dependiendo del número de URL en los marcadores
-2. No cierre la ventana emergente de la extensión durante el escaneo
-3. La operación de limpieza creará automáticamente un archivo de copia de seguridad, guardado en el escritorio
-4. Algunos sitios web pueden no detectarse con precisión debido a restricciones de políticas de seguridad
-5. Se recomienda escanear y limpiar los marcadores periódicamente para mantener la validez de los marcadores
+No hay cuentas, telemetría ni servidor del desarrollador. Los resultados y tareas se guardan en el almacenamiento local de la extensión. El análisis contacta directamente con los sitios marcados, sin cookies de inicio de sesión. Guarda las copias de forma segura y elimina las URL privadas y los tokens de los informes de errores.
 
-## Método de Recuperación de Marcadores
+Con Node.js 22+, ejecuta `npm test` y `npm run check`, sin dependencias externas. Verifica la eliminación y restauración en un perfil separado del navegador. Se agradecen los [informes de errores](https://github.com/leiseek/clean-bookmarks/issues), traducciones y contribuciones.
 
-### Método de Recuperación de Marcadores
-
-La extensión ahora respalda los marcadores en formato HTML, que se puede importar directamente en los navegadores Chrome y Edge.
-
-#### Recuperación de Marcadores en el Navegador Chrome
-1. Abra el navegador Chrome, haga clic en el menú de tres puntos en la esquina superior derecha → Marcadores → Administrador de Marcadores
-2. En la página del administrador de marcadores, haga clic en el menú de tres puntos en la esquina superior derecha → Importar marcadores y configuración
-3. En la ventana de importación emergente, seleccione la opción "Importar desde archivo HTML"
-4. Haga clic en el botón "Seleccionar archivo", busque y seleccione el archivo HTML previamente respaldado
-5. Haga clic en el botón "Importar" para completar la recuperación
-
-#### Recuperación de Marcadores en el Navegador Edge
-1. Abra los favoritos en Edge: presione `Ctrl+Shift+O` o haga clic en el menú de tres puntos en la esquina superior derecha → Favoritos → Administrar favoritos
-2. Haga clic en el botón "Importar favoritos" en la esquina superior derecha de la interfaz de favoritos
-3. En la ventana de importación emergente, seleccione la opción "Importar desde archivo"
-4. Haga clic en el botón "Seleccionar archivo", busque y seleccione el archivo HTML previamente respaldado
-5. Haga clic en el botón "Importar" para completar la recuperación
-
-### Ubicación del Archivo de Copia de Seguridad
-- De forma predeterminada, los archivos de copia de seguridad se descargarán en su carpeta "Descargas"
-- Formato del nombre del archivo: `bookmarks_backup_fecha.html` (ejemplo: `bookmarks_backup_2023-06-15.html`)
-- Se recomienda guardar archivos de copia de seguridad importantes en un lugar seguro adicional para evitar pérdidas accidentales
-
-## Implementación Técnica
-
-- Uso de la API Chrome Bookmarks para obtener datos de marcadores
-- Uso de la API Fetch para detectar la accesibilidad de URL
-- Uso de la API Chrome Downloads para implementar la descarga de archivos de copia de seguridad
-- Uso de la API Chrome Storage para almacenar resultados del escaneo
-- Diseño de interfaz de usuario responsive, que admite diferentes tamaños de pantalla
-
-## Entorno de Desarrollo
-
-- Navegador Chrome (Manifest V3)
-- No se requieren dependencias adicionales ni herramientas de compilación
-
-## Soporte Multilingüe
-
-Esta extensión admite los siguientes idiomas:
-
-- Chino (simplificado)
-- Inglés
-- Japonés
-- Coreano
-- Francés
-- Español
-
-La extensión cambiará automáticamente el idioma de visualización según la configuración de idioma de su navegador.
-
-## Historial de Versiones
-- v1.0: Versión inicial, que incluye escaneo de marcadores, detección de enlaces inválidos, copia de seguridad y limpieza en formato HTML, admite importación y recuperación directas en los navegadores Chrome y Edge, admite internacionalización multilingüe (chino, inglés, japonés, coreano, francés y español)
+Consulta el [README en inglés](README-en.md) para más detalles. Licencia: [MulanPSL-2.0](LICENSE).

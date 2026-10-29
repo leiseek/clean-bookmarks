@@ -138,7 +138,7 @@
     }
   },
   "confirmCleanActions1": {
-    "message": "現在のブックマークをデスクトップにバックアップ",
+    "message": "完全なバックアップをブラウザーのダウンロード先に保存し、完了を確認してから削除",
     "description": "Confirm cleanup action 1"
   },
   "confirmCleanActions2": {
@@ -172,7 +172,7 @@
     }
   },
   "backupSavedText": {
-    "message": "バックアップファイルがデスクトップに保存されました",
+    "message": "バックアップはブラウザーのダウンロード先に保存されました。ダウンロード一覧で確認できます。",
     "description": "Backup saved text"
   },
   "closeButton": {
@@ -308,5 +308,85 @@
   "backupEmpty": {
     "message": "バックアップするブックマークの内容が見つかりませんでした",
     "description": "バックアップ内容空メッセージ"
+  },
+  "statusUnknown": {
+    "description": "statusUnknown",
+    "message": "確認できません"
+  },
+  "statusSkipped": {
+    "description": "statusSkipped",
+    "message": "スキップ"
+  },
+  "unknownBookmarks": {
+    "description": "unknownBookmarks",
+    "message": "確認できません: $count$",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
+  "skippedBookmarks": {
+    "description": "skippedBookmarks",
+    "message": "スキップ: $count$",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
+  "scanProgressLabel": {
+    "description": "scanProgressLabel",
+    "message": "進捗: "
+  },
+  "scanInterrupted": {
+    "description": "scanInterrupted",
+    "message": "前回のスキャンは中断されました。再スキャンしてください。"
+  },
+  "operationInterrupted": {
+    "description": "operationInterrupted",
+    "message": "前回のバックアップまたは削除は中断されました。ダウンロードを確認し、再スキャンしてください。"
+  },
+  "operationBusy": {
+    "description": "operationBusy",
+    "message": "スキャン、バックアップまたは削除の処理中です。お待ちください。"
+  },
+  "staleSelection": {
+    "description": "staleSelection",
+    "message": "選択したブックマークが変更されたか、無効と確認されていません。再スキャンしてください。"
+  },
+  "cleaningInProgress": {
+    "description": "cleaningInProgress",
+    "message": "バックアップと削除の処理中です。ダウンロード完了を待っています…"
+  },
+  "reasonUnsupportedProtocol": {
+    "description": "reasonUnsupportedProtocol",
+    "message": "このプロトコルはネットワーク検査と削除の対象外です。"
+  },
+  "reasonInvalidUrl": {
+    "description": "reasonInvalidUrl",
+    "message": "URLの形式を認識できません。手動で確認してください。"
+  },
+  "reasonNetworkError": {
+    "description": "reasonNetworkError",
+    "message": "通信に失敗しました。手動で確認するか、後で再試行してください。"
+  },
+  "reasonTimeout": {
+    "description": "reasonTimeout",
+    "message": "リクエストがタイムアウトしました。後で再試行してください。"
+  },
+  "reasonHttpError": {
+    "description": "reasonHttpError",
+    "message": "予期しないHTTP状態です。ログイン、権限、一時的な障害が影響している可能性があります。"
+  },
+  "reasonUnreadableResponse": {
+    "description": "reasonUnreadableResponse",
+    "message": "応答状態を読み取れません。手動で確認してください。"
+  },
+  "reasonLegacyResult": {
+    "description": "reasonLegacyResult",
+    "message": "旧バージョンの結果です。削除する前に再スキャンしてください。"
   }
 }

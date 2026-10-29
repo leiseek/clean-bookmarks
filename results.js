@@ -1,320 +1,207 @@
 document.addEventListener('DOMContentLoaded', function() {
-  // 设置国际化文本
-  document.getElementById('pageTitle').textContent = chrome.i18n.getMessage('resultsPageTitle');
-  document.getElementById('pageHeader').textContent = chrome.i18n.getMessage('resultsPageHeader');
-  document.getElementById('refreshBtn').textContent = chrome.i18n.getMessage('refreshButton');
-  document.getElementById('loadingState').textContent = chrome.i18n.getMessage('loadingResults');
-  document.getElementById('selectAllLabel').textContent = chrome.i18n.getMessage('selectAllInvalid');
-  document.getElementById('backupBtn').textContent = chrome.i18n.getMessage('backupButton');
-  document.getElementById('cleanBtn').textContent = chrome.i18n.getMessage('cleanButton');
-  document.getElementById('emptyStateIcon').textContent = chrome.i18n.getMessage('emptyStateIcon');
-  document.getElementById('emptyStateTitle').textContent = chrome.i18n.getMessage('emptyStateTitle');
-  document.getElementById('emptyStateText').textContent = chrome.i18n.getMessage('emptyStateText');
-  document.getElementById('scanNowBtn').textContent = chrome.i18n.getMessage('scanNowButton');
-  document.getElementById('confirmCleanTitle').textContent = chrome.i18n.getMessage('confirmCleanTitle');
-  document.getElementById('confirmCleanActionsTitle').textContent = chrome.i18n.getMessage('confirmCleanActionsTitle');
-  document.getElementById('cancelBtn').textContent = chrome.i18n.getMessage('cancelButton');
-  document.getElementById('confirmCleanBtn').textContent = chrome.i18n.getMessage('confirmCleanButton');
-  document.getElementById('cleanCompleteTitle').textContent = chrome.i18n.getMessage('cleanCompleteTitle');
-  document.getElementById('closeResultBtn').textContent = chrome.i18n.getMessage('closeButton');
-  document.getElementById('confirmCleanAction1').textContent = chrome.i18n.getMessage('confirmCleanActions1');
-  document.getElementById('confirmCleanAction2').textContent = chrome.i18n.getMessage('confirmCleanActions2');
-  document.getElementById('confirmCleanAction3').textContent = chrome.i18n.getMessage('confirmCleanActions3');
-  document.getElementById('backupSavedText').textContent = chrome.i18n.getMessage('backupSavedText');
-  
-  // DOM元素
-  const loadingState = document.getElementById('loadingState');
-  const resultsContainer = document.getElementById('resultsContainer');
-  const emptyState = document.getElementById('emptyState');
-  const bookmarkList = document.getElementById('bookmarkList');
-  const selectAll = document.getElementById('selectAll');
-  const cleanBtn = document.getElementById('cleanBtn');
-  const backupBtn = document.getElementById('backupBtn');
-  const confirmModal = document.getElementById('confirmModal');
-  const resultModal = document.getElementById('resultModal');
-  const confirmCleanText = document.getElementById('confirmCleanText'); // 修正变量名
-  const cleanCompleteText = document.getElementById('cleanCompleteText'); // 修正变量名
-  
-  let scanResults = [];
-  let isAutoClean = false; // 用于标识是否自动进入清理模式
-  
-  // 检查URL参数，判断是否自动进入清理模式
-  const urlParams = new URLSearchParams(window.location.search);
-  if (urlParams.get('action') === 'clean') {
-    isAutoClean = true;
-  }
-  
-  // 加载扫描结果
-  loadScanResults();
-  
-  // 事件监听
-  document.getElementById('refreshBtn').addEventListener('click', function() {
-    chrome.runtime.sendMessage({ type: 'startScan' });
-    window.close();
-  });
-  
-  document.getElementById('scanNowBtn').addEventListener('click', function() {
-    chrome.runtime.sendMessage({ type: 'startScan' });
-    window.close();
-  });
-  
-  selectAll.addEventListener('change', function() {
-    const checkboxes = document.querySelectorAll('.bookmark-checkbox.invalid');
-    checkboxes.forEach(checkbox => {
-      checkbox.checked = selectAll.checked;
-    });
-    updateCleanButton();
-  });
-  
-  backupBtn.addEventListener('click', backupBookmarks);
-  cleanBtn.addEventListener('click', showConfirmDialog);
-  document.getElementById('confirmCleanBtn').addEventListener('click', cleanSelectedBookmarks);
-  document.getElementById('cancelBtn').addEventListener('click', hideConfirmDialog);
-  document.getElementById('closeResultBtn').addEventListener('click', function() {
-    resultModal.style.display = 'none';
-    window.location.href = 'results.html'; // 刷新页面
-  });
-  
-  // 监听来自background的消息
-  chrome.runtime.onMessage.addListener(function(message) {
-    if (message.type === 'cleanComplete') {
-        hideConfirmDialog();
-        cleanCompleteText.textContent = chrome.i18n.getMessage('cleanCompleteText', [message.removedCount]);
-        resultModal.style.display = 'block';
-    } else if (message.type === 'cleanError') {
-      hideConfirmDialog();
-      alert(chrome.i18n.getMessage('cleanError') + message.error);
-    } else if (message.type === 'backupComplete') {
-      // 处理备份完成消息
-      if (message.status === 'success') {
-        alert(chrome.i18n.getMessage('backupSuccess') || message.message || '书签备份成功');
-      } else if (message.status === 'empty') {
-        alert(chrome.i18n.getMessage('backupEmpty') || message.message || '没有找到可备份的书签内容');
-      } else if (message.status === 'error') {
-        alert(chrome.i18n.getMessage('backupFailed') || message.message || '书签备份失败');
-      }
-    }
-  });
-  
-  // 加载扫描结果
-  function loadScanResults() {
-    chrome.storage.local.get(['scanResults'], function(result) {
-      if (result.scanResults && result.scanResults.length > 0) {
-        scanResults = result.scanResults;
-        displayResults();
-        loadingState.style.display = 'none';
-        resultsContainer.style.display = 'block';
-        
-        // 如果是自动进入清理模式，自动选中所有失效链接
-        if (isAutoClean) {
-          selectAll.checked = true;
-          selectAll.dispatchEvent(new Event('change'));
-          updateCleanButton();
-        }
-      } else {
-        loadingState.style.display = 'none';
-        emptyState.style.display = 'block';
-      }
-    });
-  }
-  
-  // 显示结果
-  function displayResults() {
-    // 更新统计数据
-const totalCount = scanResults.length;
-const invalidCount = scanResults.filter(item => !item.isValid).length;
-const validCount = totalCount - invalidCount;
+  const element = id => document.getElementById(id);
+  const text = (key, values = []) => chrome.i18n.getMessage(key, values.map(String));
+  const labels = {
+    pageTitle: 'resultsPageTitle', pageHeader: 'resultsPageHeader', refreshBtn: 'refreshButton',
+    loadingState: 'loadingResults', selectAllLabel: 'selectAllInvalid', backupBtn: 'backupButton',
+    cleanBtn: 'cleanButton', emptyStateIcon: 'emptyStateIcon', emptyStateTitle: 'emptyStateTitle',
+    emptyStateText: 'emptyStateText', scanNowBtn: 'scanNowButton', confirmCleanTitle: 'confirmCleanTitle',
+    confirmCleanActionsTitle: 'confirmCleanActionsTitle', cancelBtn: 'cancelButton',
+    confirmCleanBtn: 'confirmCleanButton', cleanCompleteTitle: 'cleanCompleteTitle',
+    closeResultBtn: 'closeButton', confirmCleanAction1: 'confirmCleanActions1',
+    confirmCleanAction2: 'confirmCleanActions2', confirmCleanAction3: 'confirmCleanActions3',
+    backupSavedText: 'backupSavedText'
+  };
+  for (const [id, key] of Object.entries(labels)) element(id).textContent = text(key);
 
-document.getElementById('totalText').textContent = chrome.i18n.getMessage('totalBookmarks', [totalCount]);
-document.getElementById('invalidText').textContent = chrome.i18n.getMessage('invalidBookmarks', [invalidCount]);
-document.getElementById('validText').textContent = chrome.i18n.getMessage('validBookmarks', [validCount]);
-    
-    // 清空列表
-    bookmarkList.innerHTML = '';
-    
-    // 按文件夹分组
-    const bookmarksByFolder = {};
-    scanResults.forEach(bookmark => {
-      const folder = bookmark.folderPath || '其他书签';
-      if (!bookmarksByFolder[folder]) {
-        bookmarksByFolder[folder] = [];
+  const autoClean = new URLSearchParams(window.location.search).get('action') === 'clean';
+  let initialLoad = true;
+  let scanResults = [];
+  const selectedIds = new Set();
+  let state = {};
+  let requestPending = false;
+  let stateVersion = 0;
+  function statusOf(bookmark) {
+    // Old versions did not distinguish unreachable from invalid. Require a new scan.
+    if (!['valid', 'invalid', 'unknown', 'skipped'].includes(bookmark.status)) return 'unknown';
+    if (bookmark.status === 'invalid' && (![404, 410].includes(bookmark.httpStatus) || !/^https?:\/\//i.test(bookmark.url))) return 'unknown';
+    return bookmark.status;
+  }
+  function isBusy() { return requestPending || Boolean(state.backupJob) || state.isScanning; }
+  function updateButtons() {
+    const invalid = scanResults.filter(bookmark => statusOf(bookmark) === 'invalid');
+    const selected = invalid.filter(bookmark => selectedIds.has(bookmark.id));
+    element('selectAll').disabled = isBusy() || invalid.length === 0;
+    element('selectAll').checked = invalid.length > 0 && selected.length === invalid.length;
+    element('selectAll').indeterminate = selected.length > 0 && selected.length < invalid.length;
+    element('cleanBtn').disabled = isBusy() || !selected.length;
+    element('backupBtn').disabled = isBusy();
+    element('confirmCleanBtn').disabled = isBusy();
+    element('cancelBtn').disabled = isBusy();
+    element('refreshBtn').disabled = isBusy();
+    element('scanNowBtn').disabled = isBusy();
+    element('confirmCleanBtn').textContent = text(isBusy() ? 'cleaningInProgress' : 'confirmCleanButton');
+    document.querySelectorAll('.bookmark-checkbox.invalid').forEach(checkbox => { checkbox.disabled = isBusy(); });
+  }
+
+  function operationText() {
+    if (state.backupJob) return text(state.backupJob.kind === 'clean' ? 'cleaningInProgress' : 'backupInProgress');
+    const operation = state.lastOperation;
+    if (!operation) return '';
+    if (operation.type === 'cleanError' || operation.status === 'error') return operation.error || text('backupFailed');
+    if (operation.type === 'cleanComplete') return text('cleanCompleteText', [operation.removedCount]);
+    return text('backupSuccess');
+  }
+
+  async function loadScanResults() {
+    const version = ++stateVersion;
+    try {
+      const nextState = await chrome.runtime.sendMessage({ type: 'getScanState' });
+      if (version !== stateVersion) return;
+      if (nextState.error) throw new Error(nextState.error);
+      state = nextState;
+      scanResults = state.scanStatus === 'complete' ? state.scanResults || [] : [];
+      if (initialLoad && !state.isScanning) {
+        if (autoClean) scanResults.filter(bookmark => statusOf(bookmark) === 'invalid').forEach(bookmark => selectedIds.add(bookmark.id));
+        initialLoad = false;
       }
-      bookmarksByFolder[folder].push(bookmark);
-    });
-    
-    // 按文件夹名称排序
-    const sortedFolders = Object.keys(bookmarksByFolder).sort();
-    
-    // 创建文件夹分组
-    sortedFolders.forEach(folderName => {
-      const folderSection = createFolderSection(folderName, bookmarksByFolder[folderName]);
-      bookmarkList.appendChild(folderSection);
-    });
-    
-    // 初始化全选复选框状态
-    updateCleanButton();
+      element('loadingState').style.display = state.isScanning ? 'block' : 'none';
+      element('loadingState').textContent = text('scanningButton');
+      element('resultsContainer').style.display = !state.isScanning && state.scanStatus === 'complete' ? 'block' : 'none';
+      element('emptyState').style.display = !state.isScanning && state.scanStatus !== 'complete' ? 'block' : 'none';
+      element('emptyStateText').textContent = state.scanError || text('emptyStateText');
+      element('operationStatus').textContent = operationText();
+      displayResults();
+    } catch (error) {
+      element('loadingState').style.display = 'none';
+      element('operationStatus').textContent = error.message;
+    }
+    updateButtons();
   }
-  
-  // 创建文件夹分组
-  function createFolderSection(folderName, bookmarks) {
-    const section = document.createElement('div');
-    section.className = 'folder-section';
-    
-    const folderHeader = document.createElement('div');
-    folderHeader.className = 'folder-header';
-    
-    const folderTitle = document.createElement('h3');
-    folderTitle.className = 'folder-title';
-    folderTitle.textContent = folderName;
-    
-    // 统计文件夹中的失效链接数
-    const invalidCount = bookmarks.filter(item => !item.isValid).length;
-    const totalCount = bookmarks.length;
-    
-    const folderStats = document.createElement('span');
-    folderStats.className = 'folder-stats';
-    folderStats.textContent = `${invalidCount}/${totalCount} 失效`;
-    
-    folderHeader.appendChild(folderTitle);
-    folderHeader.appendChild(folderStats);
-    section.appendChild(folderHeader);
-    
-    // 按状态排序，失效的在前面
-    const sortedBookmarks = [...bookmarks].sort((a, b) => {
-      if (a.isValid === b.isValid) return 0;
-      return a.isValid ? 1 : -1;
-    });
-    
-    // 创建书签项
-    sortedBookmarks.forEach(bookmark => {
-      const bookmarkItem = createBookmarkItem(bookmark);
-      section.appendChild(bookmarkItem);
-    });
-    
-    return section;
+
+  function displayResults() {
+    const counts = { valid: 0, invalid: 0, unknown: 0, skipped: 0 };
+    scanResults.forEach(bookmark => counts[statusOf(bookmark)]++);
+    element('totalText').textContent = text('totalBookmarks', [scanResults.length]);
+    for (const status of Object.keys(counts)) element(`${status}Text`).textContent = text(`${status}Bookmarks`, [counts[status]]);
+    element('bookmarkList').replaceChildren();
+    const folders = new Map();
+    for (const bookmark of scanResults) {
+      const folder = bookmark.folderPath || text('otherBookmarks');
+      if (!folders.has(folder)) folders.set(folder, []);
+      folders.get(folder).push(bookmark);
+    }
+    for (const name of [...folders.keys()].sort()) {
+      const bookmarks = folders.get(name);
+      const section = document.createElement('div');
+      section.className = 'folder-section';
+      const header = document.createElement('div');
+      header.className = 'folder-header';
+      const title = document.createElement('h3');
+      title.className = 'folder-title';
+      title.textContent = name;
+      const stats = document.createElement('span');
+      stats.className = 'folder-stats';
+      stats.textContent = text('folderStats', [bookmarks.filter(bookmark => statusOf(bookmark) === 'invalid').length, bookmarks.length]);
+      header.append(title, stats);
+      section.append(header);
+      const order = { invalid: 0, unknown: 1, valid: 2, skipped: 3 };
+      bookmarks.sort((a, b) => order[statusOf(a)] - order[statusOf(b)]);
+      bookmarks.forEach(bookmark => section.append(createBookmarkItem(bookmark)));
+      element('bookmarkList').append(section);
+    }
   }
-  
-  // 创建书签项
+
   function createBookmarkItem(bookmark) {
+    const status = statusOf(bookmark);
     const item = document.createElement('div');
-    item.className = `bookmark-item ${bookmark.isValid ? '' : 'invalid'}`;
-    
+    item.className = `bookmark-item ${status}`;
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
-    checkbox.className = `bookmark-checkbox ${bookmark.isValid ? '' : 'invalid'}`;
+    checkbox.className = `bookmark-checkbox ${status}`;
     checkbox.value = bookmark.id;
-    
-    // 只有失效的书签可以选择
-    if (!bookmark.isValid) {
-      checkbox.checked = selectAll.checked;
-    } else {
-      checkbox.disabled = true;
-      checkbox.style.display = 'none';
-    }
-    
-    checkbox.addEventListener('change', updateCleanButton);
-    
+    checkbox.checked = selectedIds.has(bookmark.id);
+    checkbox.disabled = status !== 'invalid' || isBusy();
+    checkbox.setAttribute('aria-label', bookmark.title || bookmark.url);
+    if (status !== 'invalid') checkbox.style.display = 'none';
+    checkbox.addEventListener('change', () => {
+      if (checkbox.checked) selectedIds.add(bookmark.id); else selectedIds.delete(bookmark.id);
+      updateButtons();
+    });
     const info = document.createElement('div');
     info.className = 'bookmark-info';
-    
     const title = document.createElement('div');
     title.className = 'bookmark-title';
-    title.textContent = bookmark.title;
-    
+    title.textContent = bookmark.title || text('untitledBookmark');
     const url = document.createElement('div');
     url.className = 'bookmark-url';
     url.textContent = bookmark.url;
-    
-    info.appendChild(title);
-    info.appendChild(url);
-    
-    const status = document.createElement('div');
-    status.className = `bookmark-status ${bookmark.isValid ? 'status-valid' : 'status-invalid'}`;
-    status.textContent = bookmark.isValid ? chrome.i18n.getMessage('statusValid') : chrome.i18n.getMessage('statusInvalid');
-    
-    // 添加点击事件，在item上创建一个可点击的链接
-    item.style.cursor = 'pointer';
-    item.addEventListener('click', function(e) {
-      // 如果点击的是复选框，不处理打开链接
-      if (e.target === checkbox) {
-        return;
-      }
-      
-      // 在新标签页打开链接
-      chrome.tabs.create({ url: bookmark.url });
+    info.append(title, url);
+    const reason = bookmark.status ? bookmark.reason : 'legacyResult';
+    if (reason) {
+      const note = document.createElement('div');
+      note.className = 'bookmark-note';
+      note.textContent = text(`reason${reason[0].toUpperCase()}${reason.slice(1)}`);
+      info.append(note);
+    }
+    const badge = document.createElement('div');
+    badge.className = `bookmark-status status-${status}`;
+    badge.textContent = text(`status${status[0].toUpperCase()}${status.slice(1)}`) +
+      (bookmark.httpStatus ? ` (HTTP ${bookmark.httpStatus})` : '');
+    item.addEventListener('click', event => {
+      if (event.target !== checkbox) chrome.tabs.create({ url: bookmark.url });
     });
-    
-    item.appendChild(checkbox);
-    item.appendChild(info);
-    item.appendChild(status);
-    
+    item.append(checkbox, info, badge);
     return item;
   }
-  
-  // 更新清理按钮状态
-  function updateCleanButton() {
-    const checkboxes = document.querySelectorAll('.bookmark-checkbox.invalid:checked');
-    cleanBtn.disabled = checkboxes.length === 0;
-    
-    // 更新全选复选框状态
-    const allInvalidCheckboxes = document.querySelectorAll('.bookmark-checkbox.invalid');
-    const checkedInvalidCheckboxes = document.querySelectorAll('.bookmark-checkbox.invalid:checked');
-    
-    // 如果没有失效复选框，全选复选框禁用
-    if (allInvalidCheckboxes.length === 0) {
-      selectAll.disabled = true;
-      selectAll.checked = false;
-    } else {
-      selectAll.disabled = false;
-      // 如果所有失效复选框都被选中，则全选复选框也选中
-      selectAll.checked = allInvalidCheckboxes.length === checkedInvalidCheckboxes.length;
-    }
-  }
-  
-  // 备份书签
-  function backupBookmarks() {
-    chrome.runtime.sendMessage({ type: 'backupBookmarks' }, function(response) {
-      if (chrome.runtime.lastError) {
-        console.error('备份请求发送失败:', chrome.runtime.lastError);
-        alert(chrome.i18n.getMessage('backupFailed') || '备份失败，请稍后重试');
-      } else if (response && response.started) {
-        // 显示更明确的备份进行中消息，而不是简单的'备份已开始'
-        alert(chrome.i18n.getMessage('backupInProgress') || '书签备份正在进行中，文件将自动下载到您的下载文件夹');
-      }
+
+  element('selectAll').addEventListener('change', () => {
+    document.querySelectorAll('.bookmark-checkbox.invalid').forEach(checkbox => {
+      checkbox.checked = element('selectAll').checked;
+      if (checkbox.checked) selectedIds.add(checkbox.value); else selectedIds.delete(checkbox.value);
     });
-  }
-  
-  // 显示确认对话框
-  function showConfirmDialog() {
-    const checkboxes = document.querySelectorAll('.bookmark-checkbox.invalid:checked');
-    const count = checkboxes.length;
-    
-    if (count === 0) {
-      alert(chrome.i18n.getMessage('selectBookmarksToClean'));
-      return;
+    updateButtons();
+  });
+  element('cleanBtn').addEventListener('click', () => {
+    element('confirmCleanText').textContent = text('confirmCleanText', [selectedIds.size]);
+    element('confirmModal').style.display = 'block';
+  });
+  element('cancelBtn').addEventListener('click', () => { element('confirmModal').style.display = 'none'; });
+  element('closeResultBtn').addEventListener('click', () => { element('resultModal').style.display = 'none'; });
+
+  async function sendAction(message) {
+    if (isBusy()) return;
+    requestPending = true;
+    updateButtons();
+    try {
+      const response = await chrome.runtime.sendMessage(message);
+      if (response.error) throw new Error(response.error);
+    } catch (error) {
+      element('confirmModal').style.display = 'none';
+      element('operationStatus').textContent = error.message;
+    } finally {
+      requestPending = false;
+      await loadScanResults();
     }
-    
-    confirmCleanText.textContent = chrome.i18n.getMessage('confirmCleanText', [count]);
-    confirmModal.style.display = 'block';
   }
-  
-  // 隐藏确认对话框
-  function hideConfirmDialog() {
-    confirmModal.style.display = 'none';
-  }
-  
-  // 清理选中的书签
-  function cleanSelectedBookmarks() {
-    const checkboxes = document.querySelectorAll('.bookmark-checkbox.invalid:checked');
-    const selectedIds = Array.from(checkboxes).map(cb => cb.value);
-    
-    if (selectedIds.length === 0) {
-      return;
+  element('confirmCleanBtn').addEventListener('click', () => sendAction({ type: 'backupAndClean', selectedIds: [...selectedIds] }));
+  element('backupBtn').addEventListener('click', () => sendAction({ type: 'backupBookmarks' }));
+  element('refreshBtn').addEventListener('click', () => sendAction({ type: 'startScan' }));
+  element('scanNowBtn').addEventListener('click', () => sendAction({ type: 'startScan' }));
+
+  chrome.runtime.onMessage.addListener(message => {
+    if (message.type === 'cleanComplete') {
+      element('confirmModal').style.display = 'none';
+      element('cleanCompleteText').textContent = text('cleanCompleteText', [message.removedCount]);
+      element('resultModal').style.display = 'block';
+      selectedIds.clear();
+    } else if (message.type === 'cleanError') {
+      element('confirmModal').style.display = 'none';
     }
-    
-    chrome.runtime.sendMessage({ 
-      type: 'backupAndClean', 
-      selectedIds: selectedIds 
-    });
-  }
+    if (['scanComplete', 'scanError', 'cleanComplete', 'cleanError', 'backupComplete'].includes(message.type)) loadScanResults();
+  });
+  chrome.storage.onChanged.addListener((changes, area) => {
+    if (area === 'local' && ['scanStatus', 'scanResults', 'backupJob', 'lastOperation'].some(key => key in changes)) loadScanResults();
+  });
+  loadScanResults();
 });

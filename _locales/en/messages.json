@@ -138,7 +138,7 @@
     }
   },
   "confirmCleanActions1": {
-    "message": "Backup current bookmarks to desktop",
+    "message": "Save a full backup to the browser download directory and wait for completion before deleting",
     "description": "Confirm cleanup action 1"
   },
   "confirmCleanActions2": {
@@ -172,7 +172,7 @@
     }
   },
   "backupSavedText": {
-    "message": "Backup file has been saved to your desktop",
+    "message": "The backup is saved in your browser download directory. Find it in the downloads list.",
     "description": "Backup saved text"
   },
   "closeButton": {
@@ -308,5 +308,85 @@
   "backupEmpty": {
     "message": "No bookmark content found to backup",
     "description": "Backup empty content message"
+  },
+  "statusUnknown": {
+    "description": "statusUnknown",
+    "message": "Unknown"
+  },
+  "statusSkipped": {
+    "description": "statusSkipped",
+    "message": "Skipped"
+  },
+  "unknownBookmarks": {
+    "description": "unknownBookmarks",
+    "message": "Unknown: $count$",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
+  "skippedBookmarks": {
+    "description": "skippedBookmarks",
+    "message": "Skipped: $count$",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
+  "scanProgressLabel": {
+    "description": "scanProgressLabel",
+    "message": "Progress: "
+  },
+  "scanInterrupted": {
+    "description": "scanInterrupted",
+    "message": "The previous scan was interrupted. Please scan again."
+  },
+  "operationInterrupted": {
+    "description": "operationInterrupted",
+    "message": "The previous backup or cleanup was interrupted. Check your downloads and scan again before cleaning."
+  },
+  "operationBusy": {
+    "description": "operationBusy",
+    "message": "A scan, backup or cleanup is in progress. Please wait."
+  },
+  "staleSelection": {
+    "description": "staleSelection",
+    "message": "Selected bookmarks changed or were not confirmed invalid. Please scan again before cleaning."
+  },
+  "cleaningInProgress": {
+    "description": "cleaningInProgress",
+    "message": "Backing up and cleaning. Waiting for the download to finish…"
+  },
+  "reasonUnsupportedProtocol": {
+    "description": "reasonUnsupportedProtocol",
+    "message": "This protocol is excluded from network checks and cleanup."
+  },
+  "reasonInvalidUrl": {
+    "description": "reasonInvalidUrl",
+    "message": "Unrecognized URL format. Please check manually."
+  },
+  "reasonNetworkError": {
+    "description": "reasonNetworkError",
+    "message": "Network request failed. Check manually or try again later."
+  },
+  "reasonTimeout": {
+    "description": "reasonTimeout",
+    "message": "Request timed out. Please try again later."
+  },
+  "reasonHttpError": {
+    "description": "reasonHttpError",
+    "message": "Unexpected HTTP status; login, permissions or a temporary outage may affect detection."
+  },
+  "reasonUnreadableResponse": {
+    "description": "reasonUnreadableResponse",
+    "message": "The response status could not be read. Please check manually."
+  },
+  "reasonLegacyResult": {
+    "description": "reasonLegacyResult",
+    "message": "Results from an older version must be rescanned before cleanup."
   }
 }

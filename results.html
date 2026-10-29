@@ -134,6 +134,7 @@
     
     .bookmark-item::before {
       content: '';
+      pointer-events: none;
       position: absolute;
       top: 0;
       left: 0;
@@ -222,6 +223,11 @@
       background-color: rgba(255, 59, 48, 0.1);
       color: var(--danger-color);
     }
+
+    .status-unknown { background: #fff3cd; color: #805b00; }
+    .status-skipped { background: #eee; color: #555; }
+    .bookmark-note { margin-top: 6px; color: #805b00; font-size: 12px; }
+    #operationStatus { color: #555; overflow-wrap: anywhere; }
     
     .action-bar {
       margin-top: 30px;
@@ -419,6 +425,7 @@
     </div>
     
     <div id="loadingState" class="loading"></div>
+    <p id="operationStatus" role="status" aria-live="polite"></p>
     
     <div id="resultsContainer" style="display: none;">
       <div class="summary">
@@ -431,6 +438,8 @@
         <div class="summary-item">
           <span id="validText"></span>
         </div>
+        <div class="summary-item"><span id="unknownText"></span></div>
+        <div class="summary-item"><span id="skippedText"></span></div>
       </div>
       
       <div class="action-bar">
